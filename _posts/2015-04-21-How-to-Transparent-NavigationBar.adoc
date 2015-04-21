@@ -15,7 +15,7 @@ self.navigationController?.navigationBar.setBackgroundImage(UIImage(), forBarMet
 image::https://github.com/J0HDev/blog/blob/gh-pages/images/iOS%20Simulator%20Screen%20Shot%202015年4月21日%20下午8.34.47.png?raw=true[bg,500, 300]
 
 
-image::https://github.com/J0HDev/blog/blob/gh-pages/images/iOS%20Simulator%20Screen%20Shot%202015年4月21日%20下午8.34.58.png?raw=true[bg,500, 300]
+image::https://github.com/J0HDev/blog/blob/gh-pages/images/iOS%20Simulator%20Screen%20Shot%202015年4月21日%20下午8.34.58.png?raw=true[bg,300, 200]
 
 很简单的方法，只需要给当前的 navigationBar 设置一个空白的背景图片即可，但是有一个问题，默认情况下 navigationBar 最下面是有一条分隔线的，我想把它去掉，查了很久没有查到该怎么做。
 
