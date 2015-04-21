@@ -1,0 +1,38 @@
+= 15.4.21 如何透明 NavigationBar 背景
+:hp-alt-title: How to Transparent NavigationBar
+
+iOS7 以后很多场景都有让 navigationBar 背景透明，然后滚动到某一个地方的时候显示出来。
+
+=== 如何实现
+
+下面的例子记录了如何让 navigationBar 背景透明。
+
+```
+//隐藏 navigationBar 
+self.navigationController?.navigationBar.setBackgroundImage(UIImage(), forBarMetrics: UIBarMetrics.Default)
+```
+
+image::https://github.com/J0HDev/blog/blob/gh-pages/images/iOS%20Simulator%20Screen%20Shot%202015年4月21日%20下午8.34.47.png?raw=true[]
+
+
+image::https://github.com/J0HDev/blog/blob/gh-pages/images/iOS%20Simulator%20Screen%20Shot%202015年4月21日%20下午8.34.58.png?raw=true[]
+
+很简单的方法，只需要给当前的 navigationBar 设置一个空白的背景图片即可，但是有一个问题，默认情况下 navigationBar 最下面是有一条分隔线的，我想把它去掉，查了很久没有查到该怎么做。
+
+有一天在微博上看到有人分享了一个去处 TabBar 上面分隔线的解决方案:
+http://stackoverflow.com/questions/18939168/ios-7-tabbar-line-how-to-remove-it
+
+上面说只需要把它的 ShadowImage 设置为空白图片即可，那么 TabBar 和 navigationBar 应该是一样一样的，如果这么做是不是可以呢？
+
+于是
+
+```
+//设置 shadowImage 和 backgroundImage 来实现全透明 navigationBar
+self.navigationController!.navigationBar.shadowImage = UIImage()       self.navigationController?.navigationBar.setBackgroundImage(UIImage(), forBarMetrics: UIBarMetrics.Default)
+```
+
+image::https://github.com/J0HDev/blog/blob/gh-pages/images/iOS%20Simulator%20Screen%20Shot%202015年4月21日%20下午8.35.13.png?raw=true[]
+
+image::https://github.com/J0HDev/blog/blob/gh-pages/images/iOS%20Simulator%20Screen%20Shot%202015年4月21日%20下午8.35.16.png?raw=true[]
+
+于是，完美搞定 哈哈！
