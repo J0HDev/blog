@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>15.4.22 整理 iOS 面试题 （二）</title>
+    <meta name="description" content="" />
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="//j0hdev.github.io/blog/themes/Casper/favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="//j0hdev.github.io/blog/themes/Casper/assets/css/screen.css?v=1.0.0" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+
+    <link rel="canonical" href="https://j0hdev.github.io/blog/2015/04/23/iOS-interview-part-2.html" />
+    
+    <meta property="og:site_name" content="J0hnny的博客" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="15.4.22 整理 iOS 面试题 （二）" />
+    <meta property="og:description" content="Question 请解释以下keywords的区别： assign vs weak, block vs weak assign 关键字适用于基本数据类型，因为 assign 关键词不存在 retain 的操作，意味着分配过内存的对象使用该关键词有可能会出现引用计数器计数不准，导致内存泄露。 weak 关键词是相对于 strong 关键词来说的，这两个关键词出现在 ARC 之后，weak 代表这是一个弱引用对象，也就是说，该对象不能直接被实例化。 //定义一个 view1 属性 @property (weak, nonatomic) UIView *vi..." />
+    <meta property="og:url" content="https://j0hdev.github.io/blog/2015/04/23/iOS-interview-part-2.html" />
+    <meta property="article:published_time" content="2015-04-22T16:00:00.000Z" />
+    <meta property="article:modified_time" content="2015-04-23T15:19:58.830Z" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="15.4.22 整理 iOS 面试题 （二）" />
+    <meta name="twitter:description" content="Question 请解释以下keywords的区别： assign vs weak, block vs weak assign 关键字适用于基本数据类型，因为 assign 关键词不存在 retain 的操作，意味着分配过内存的对象使用该关键词有可能会出现引用计数器计数不准，导致内存泄露。 weak 关键词是相对于 strong 关键词来说的，这两个关键词出现在 ARC 之后，weak 代表这是一个弱引用对象，也就是说，该对象不能直接被实例化。 //定义一个 view1 属性 @property (weak, nonatomic) UIView *vi..." />
+    <meta name="twitter:url" content="https://j0hdev.github.io/blog/2015/04/23/iOS-interview-part-2.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "J0hnny的博客",
+    "author": {
+        "@type": "Person",
+        "name": "J0hnnny",
+        "image": "https://avatars.githubusercontent.com/u/6302288?v=3",
+        "url": "undefined/author/undefined",
+        "sameAs": "http://weibo.com/jcack"
+    },
+    "headline": "15.4.22 整理 iOS 面试题 （二）",
+    "url": "https://j0hdev.github.io/blog/2015/04/23/iOS-interview-part-2.html",
+    "datePublished": "2015-04-22T16:00:00.000Z",
+    "dateModified": "2015-04-23T15:19:58.830Z",
+    "description": "Question 请解释以下keywords的区别： assign vs weak, block vs weak assign 关键字适用于基本数据类型，因为 assign 关键词不存在 retain 的操作，意味着分配过内存的对象使用该关键词有可能会出现引用计数器计数不准，导致内存泄露。 weak 关键词是相对于 strong 关键词来说的，这两个关键词出现在 ARC 之后，weak 代表这是一个弱引用对象，也就是说，该对象不能直接被实例化。 //定义一个 view1 属性 @property (weak, nonatomic) UIView *vi..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="J0hnny的博客" href="https://j0hdev.github.io/blog/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+</head>
+<body class="post-template">
+
+    
+
+
+<header class="main-header post-head no-cover">
+    <nav class="main-nav  clearfix">
+        <a class="back-button icon-arrow-left" href="https://j0hdev.github.io/blog">Home</a>
+        <!-- <a class="subscribe-button icon-feed" href="https://j0hdev.github.io/blog/rss/">Subscribe</a> -->
+    </nav>
+</header>
+
+<main class="content" role="main">
+
+    <article class="post">
+
+        <header class="post-header">
+            <h1 class="post-title">15.4.22 整理 iOS 面试题 （二）</h1>
+            <section class="post-meta">
+                <time class="post-date" datetime="2015-04-23">23 April 2015</time> 
+            </section>
+        </header>
+
+        <section class="post-content">
+            <div class="sect2">
+<h3 id="_question">Question</h3>
+<div class="sect4">
+<h5 id="__keywords_assign_vs_weak_em_block_vs_em_weak">请解释以下keywords的区别： assign vs weak, <em>block vs </em>weak</h5>
+<div class="paragraph">
+<p>assign 关键字适用于基本数据类型，因为 assign 关键词不存在 retain 的操作，意味着分配过内存的对象使用该关键词有可能会出现引用计数器计数不准，导致内存泄露。</p>
+</div>
+<div class="paragraph">
+<p>weak 关键词是相对于 strong 关键词来说的，这两个关键词出现在 ARC 之后，weak 代表这是一个弱引用对象，也就是说，该对象不能直接被实例化。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>//定义一个 view1 属性
+@property (weak, nonatomic) UIView *view1;
+
+//在 viewDidLoad: 方法中赋值，并添加到界面上
+self.view1 = [[UIView alloc] initWithFrame:CGRectMake(20, 20, 200, 200)];
+self.view1.backgroundColor = [UIColor grayColor];
+[self.view addSubview:self.view1];</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>上面的代码就是 weak 对象实例化的例子，编译器会发出警告，警告内容是这样的：</p>
+</div>
+<div class="sect5">
+<h6 id="_assigning_retained_object_to_weak_property_object_will_be_released_after_assignment">Assigning retained object to weak property object will be released after assignment</h6>
+<div class="paragraph">
+<p>意思是这是一个弱引用的属性，它将在对象分配完内存后释放。</p>
+</div>
+<div class="paragraph">
+<p>所以你运行这个程序的结果就是空白的一片，什么都没有。要使得 weak 指针成功指向某块内存的前提是，该内存已经被某一个强类型指针所指向，也就是说，该内存的 retainCount 必须大于一，然后 weak 指针才能被正确赋值，但是当强类型指针做 release 操作后，weak 指针也就指向空了。</p>
+</div>
+<div class="paragraph">
+<p>__block 关键词用于 Block 中，如果你希望一个在 Block 以外的变量能够在 Block 中被修改，那么必须在该变量前面加上这个关键字</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>__block NSInteger i = 10;
+
+[UIView animateWithDuration:0.25 animations:^{
+    i = 100;
+}];</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>_ _weak 关键字和 _ _block 的区别在于，<em>block 和 strong 一样会对 block 内部的变量进行 retain 操作，而加上 </em>weak 之后则不会，概念上和上面的 weak 差不多。</p>
+</div>
+</div>
+</div>
+</div>
+        </section>
+
+        <footer class="post-footer">
+
+
+            <figure class="author-image">
+                <a class="img" href="" style="background-image: url(https://avatars.githubusercontent.com/u/6302288?v=3)"><span class="hidden">J0hnnny's Picture</span></a>
+            </figure>
+
+            <section class="author">
+                <h4><a href="">J0hnnny</a></h4>
+
+                    <p>Read <a href="">more posts</a> by this author.</p>
+                <div class="author-meta">
+                    <span class="author-location icon-location">China</span>
+                    <span class="author-link icon-link"><a href="http://weibo.com/jcack">http://weibo.com/jcack</a></span>
+                </div>
+            </section>
+
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="https://twitter.com/share?text=15.4.22%20%E6%95%B4%E7%90%86%20iOS%20%E9%9D%A2%E8%AF%95%E9%A2%98%20%EF%BC%88%E4%BA%8C%EF%BC%89&amp;url=https://j0hdev.github.io/blog/2015/04/23/iOS-interview-part-2.html"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://j0hdev.github.io/blog/2015/04/23/iOS-interview-part-2.html"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=https://j0hdev.github.io/blog/2015/04/23/iOS-interview-part-2.html"
+                   onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+        </footer>
+
+
+    </article>
+
+</main>
+
+
+
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="https://j0hdev.github.io/blog">J0hnny的博客</a> &copy; 2015</section>
+        <section class="poweredby">Proudly published with <a href="http://hubpress.io">HubPress</a></section>
+    </footer>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//j0hdev.github.io/blog/themes/Casper/assets/js/jquery.fitvids.js?v=1.0.0"></script>
+    <script type="text/javascript" src="//j0hdev.github.io/blog/themes/Casper/assets/js/index.js?v=1.0.0"></script>
+
+</body>
+</html>
