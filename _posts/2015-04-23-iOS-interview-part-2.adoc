@@ -1,0 +1,38 @@
+= 15.4.22 整理 iOS 面试题 （二）
+:hp-alt-title: iOS interview part 2
+
+=== Question
+===== 请解释以下keywords的区别： assign vs weak, __block vs __weak
+
+assign 关键字适用于基本数据类型，因为 assign 关键词不存在 retain 的操作，意味着分配过内存的对象使用该关键词有可能会出现引用计数器计数不准，导致内存泄露。
+
+weak 关键词是相对于 strong 关键词来说的，这两个关键词出现在 ARC 之后，weak 代表这是一个弱引用对象，也就是说，该对象不能直接被实例化。
+```
+//定义一个 view1 属性
+@property (weak, nonatomic) UIView *view1;
+
+//在 viewDidLoad: 方法中赋值，并添加到界面上
+self.view1 = [[UIView alloc] initWithFrame:CGRectMake(20, 20, 200, 200)];
+self.view1.backgroundColor = [UIColor grayColor];
+[self.view addSubview:self.view1];
+```
+
+上面的代码就是 weak 对象实例化的例子，编译器会发出警告，警告内容是这样的：
+
+====== Assigning retained object to weak property object will be released after assignment
+
+意思是这是一个弱引用的属性，它将在对象分配完内存后释放。
+
+所以你运行这个程序的结果就是空白的一片，什么都没有。要使得 weak 指针成功指向某块内存的前提是，该内存已经被某一个强类型指针所指向，也就是说，该内存的 retainCount 必须大于一，然后 weak 指针才能被正确赋值，但是当强类型指针做 release 操作后，weak 指针也就指向空了。
+
+__block 关键词用于 Block 中，如果你希望一个在 Block 以外的变量能够在 Block 中被修改，那么必须在该变量前面加上这个关键字
+
+```
+__block NSInteger i = 10;
+
+[UIView animateWithDuration:0.25 animations:^{
+    i = 100;
+}];
+```
+_ _weak 关键字和 _ _block 的区别在于，__block 和 strong 一样会对 block 内部的变量进行 retain 操作，而加上 __weak 之后则不会，概念上和上面的 weak 差不多。
+
