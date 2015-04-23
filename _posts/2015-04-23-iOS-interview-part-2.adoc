@@ -34,5 +34,5 @@ __block NSInteger i = 10;
     i = 100;
 }];
 ```
-_ _weak 关键字和 _ _block 的区别在于，__block 和 strong 一样会对 block 内部的变量进行 retain 操作，而加上 __weak 之后则不会，概念上和上面的 weak 差不多。
+_ _weak 关键字和 _ _block 的区别在于，_ _block 和 strong 一样会对 block 内部的变量进行 retain 操作，而加上 __weak 之后则不会，概念上和上面的 weak 差不多。
 
