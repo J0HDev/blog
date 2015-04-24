@@ -43,6 +43,8 @@ self.block();
 
 ====== capturing 'self' strongly in this block is likely to lead to a retain cycle
 
+因为 self 中有一个对 block 的引用，而 block 在内部又有一个对 self 的引用，所以会导致互相强引用而无法释放。
+
 ===== 解决方法
 
 ```
