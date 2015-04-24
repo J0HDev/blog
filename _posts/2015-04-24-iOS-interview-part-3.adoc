@@ -1,0 +1,57 @@
+= 15.4.24 整理 iOS 面试题 （三）
+:hp-alt-title: iOS interview part 3
+
+=== Question
+
+===== __block在arc和非arc下含义一样吗？
+
+标记为 __block 的变量，在block中使用，在arc下会 retain，在非arc下则不会 retin。
+
+
+===== 使用atomic一定是线程安全的吗？
+
+这个问题还真不清楚，网上也没查出个所以然来，我觉得一般情况下是线程安全的，因为在 atomic 的实现中，会加上
+
+```
+@synchronized(xxx){
+        //code
+}
+```
+这么一段代码，可以保证线程同步。
+
+至于会有什么问题，遇到才能继续写下去。
+
+===== 描述一个你遇到过的retain cycle例子。
+
+用一段代码来描述吧。
+
+```
+//首先声明一个属性，是一个block
+@property (nonatomic, strong) aBlock block;
+
+//在viewDidLoad: 中给这个block属性赋值，并且调用该block
+self.block = ^{
+    self.view.backgroundColor = [UIColor grayColor];
+};
+
+self.block();
+```
+
+这就是一个 retain cycle 的例子，写完这些代码之后，在XCode中就可以看到编译器警告，它已经检测到这里会出现 retain cycle 。
+
+警告如下
+
+====== capturing 'self' strongly in this block is likely to lead to a retain cycle
+
+===== 解决方法
+
+```
+//声明一个弱指针，指向self
+__weak typeof(self) thisController = self;
+
+self.block = ^{
+    thisController.view.backgroundColor = [UIColor grayColor];
+};
+
+self.block();
+```
