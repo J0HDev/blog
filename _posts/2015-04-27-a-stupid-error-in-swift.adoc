@@ -1,0 +1,101 @@
+= 15.4.27 记一个Swift中犯的愚蠢的错误
+:hp-alt-title: a stupid error in swift
+
+没事，无聊，想写一个圆形带加号的 Button ，并且有交互效果，打算全部用 Swift 写，没想到 Swift 使用还不熟练，就遇到了一点问题。
+
+问题是这样的
+
+```
+import UIKit
+
+class JKAddButtonView: UIView {  
+    var backgroundLayer: CALayer 
+}
+```
+
+这是在 Swift 中定义类属性的写法。上面代码的属性是一个不可选的 CALayer 类型的值，并且在 Swift 中，必须对其赋值，可以在属性定义时赋值，比如这样：
+
+```
+import UIKit
+
+class JKAddButtonView: UIView {
+    var backgroundLayer: CALayer = CALayer()
+}
+```
+
+还可以在构造器中赋值，比如这样
+
+```
+import UIKit
+
+class JKAddButtonView: UIView {  
+    var backgroundLayer: CALayer
+    
+    init(frame: CGRect, touchUpInside:() -> Void) {
+        self.backgroundLayer = CALayer()
+        super.init()
+    }
+}
+```
+(代码 1-1)
+
+如果是一个子类，还必须在确保所有不可选属性都被赋值以后调用父类的构造器。所以必须加上
+```
+super.init()
+```
+
+在 objective-c 中，没有明确规定你必须在以什么样的顺序调用父类构造函数，Swift 则有这样的硬性规定，这么做的好处是可以保证属性初始化值的安全性。
+
+关于这方面的资料：
+http://numbbbbb.gitbooks.io/-the-swift-programming-language-/content/chapter2/14_Initialization.html
+
+然后我希望在给该按钮初始化时加入一个闭包参数，这样的话，每当按钮被点击到以后，直接调用闭包内的代码，这样就能看起来简单明朗。代码就像这样:
+
+```
+var button = JKAddButtonView(frame: CGRectMake(20, 50, 50, 50)) { () -> Void in
+        println("ok")
+}
+```
+
+代码1-1后面的参数就是闭包了，那这个闭包要被后面的手指触摸事件调用到，必须有一个属性，这个属性应该是闭包类型，于是又加入了一行代码
+
+```
+import UIKit
+
+class JKAddButtonView: UIView {  
+    var backgroundLayer: CALayer 
+    var callback:() -> Void?
+}
+```
+
+这时候，构造器就开始报错了，它说你必须在调用 super.init() 之前给闭包初始化值，这我就奇怪了，明明这个闭包是可选类型，为什么一定要这么做了，于是我就在网上问了一下，答案是这样的：
+
+```
+()->Void       //代表 输入为空，返回 Void 的 closure
+
+()->Void?      //代表 输入为空，返回 Optional(Void) 的 closure
+
+( ()->Void )?  //代表 输入为空，返回 Void 的 Optional(closure)
+
+( ()->Void? )? //代表 输入为空，返回 Optional(Void) 的 Optional(closure)
+```
+
+而我这样的定义，说明这个闭包属于返回 Optional(Void) 的 闭包，而不是一个可选的闭包，仅仅是返回值是可选类型而已。看完这个顿时我就明白了！！！
+
+于是把代码改成如下这样，问题解决！！
+
+```
+import UIKit
+
+class JKAddButtonView: UIView {  
+    var backgroundLayer: CALayer 
+    var callback:(() -> Void)?
+}
+```
+
+Swift 的确不是一门简单的语言，想要熟练使用，还得花时间练习和看。
+
+对了，我这个按钮的效果图是这样的：
+
+image::https://github.com/J0HDev/blog/blob/gh-pages/images/buttondemo.gif?raw=true
+[]
