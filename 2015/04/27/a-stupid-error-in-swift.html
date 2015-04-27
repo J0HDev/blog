@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>15.4.27 记一个Swift中犯的愚蠢的错误</title>
+    <meta name="description" content="" />
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="//j0hdev.github.io/blog/themes/Casper/favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="//j0hdev.github.io/blog/themes/Casper/assets/css/screen.css?v=1.0.0" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+
+    <link rel="canonical" href="https://j0hdev.github.io/blog/2015/04/27/a-stupid-error-in-swift.html" />
+    
+    <meta property="og:site_name" content="J0hnny的博客" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="15.4.27 记一个Swift中犯的愚蠢的错误" />
+    <meta property="og:description" content="没事，无聊，想写一个圆形带加号的 Button ，并且有交互效果，打算全部用 Swift 写，没想到 Swift 使用还不熟练，就遇到了一点问题。 问题是这样的 import UIKit class JKAddButtonView: UIView {     var backgroundLayer: CALayer } 这是在 Swift 中定义类属性的写法。上面代码的属性是一个不可选的 CALayer 类型的值，并且在 Swift 中，必须对其赋值，可以在属性定义时赋值，比如这样： import UIKit class JKAddButtonView..." />
+    <meta property="og:url" content="https://j0hdev.github.io/blog/2015/04/27/a-stupid-error-in-swift.html" />
+    <meta property="article:published_time" content="2015-04-26T16:00:00.000Z" />
+    <meta property="article:modified_time" content="2015-04-27T12:58:52.153Z" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="15.4.27 记一个Swift中犯的愚蠢的错误" />
+    <meta name="twitter:description" content="没事，无聊，想写一个圆形带加号的 Button ，并且有交互效果，打算全部用 Swift 写，没想到 Swift 使用还不熟练，就遇到了一点问题。 问题是这样的 import UIKit class JKAddButtonView: UIView {     var backgroundLayer: CALayer } 这是在 Swift 中定义类属性的写法。上面代码的属性是一个不可选的 CALayer 类型的值，并且在 Swift 中，必须对其赋值，可以在属性定义时赋值，比如这样： import UIKit class JKAddButtonView..." />
+    <meta name="twitter:url" content="https://j0hdev.github.io/blog/2015/04/27/a-stupid-error-in-swift.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "J0hnny的博客",
+    "author": {
+        "@type": "Person",
+        "name": "J0hnnny",
+        "image": "https://avatars.githubusercontent.com/u/6302288?v=3",
+        "url": "undefined/author/undefined",
+        "sameAs": "http://weibo.com/jcack"
+    },
+    "headline": "15.4.27 记一个Swift中犯的愚蠢的错误",
+    "url": "https://j0hdev.github.io/blog/2015/04/27/a-stupid-error-in-swift.html",
+    "datePublished": "2015-04-26T16:00:00.000Z",
+    "dateModified": "2015-04-27T12:58:52.153Z",
+    "description": "没事，无聊，想写一个圆形带加号的 Button ，并且有交互效果，打算全部用 Swift 写，没想到 Swift 使用还不熟练，就遇到了一点问题。 问题是这样的 import UIKit class JKAddButtonView: UIView {     var backgroundLayer: CALayer } 这是在 Swift 中定义类属性的写法。上面代码的属性是一个不可选的 CALayer 类型的值，并且在 Swift 中，必须对其赋值，可以在属性定义时赋值，比如这样： import UIKit class JKAddButtonView..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="J0hnny的博客" href="https://j0hdev.github.io/blog/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+</head>
+<body class="post-template">
+
+    
+
+
+<header class="main-header post-head no-cover">
+    <nav class="main-nav  clearfix">
+        <a class="back-button icon-arrow-left" href="https://j0hdev.github.io/blog">Home</a>
+        <!-- <a class="subscribe-button icon-feed" href="https://j0hdev.github.io/blog/rss/">Subscribe</a> -->
+    </nav>
+</header>
+
+<main class="content" role="main">
+
+    <article class="post">
+
+        <header class="post-header">
+            <h1 class="post-title">15.4.27 记一个Swift中犯的愚蠢的错误</h1>
+            <section class="post-meta">
+                <time class="post-date" datetime="2015-04-27">27 April 2015</time> 
+            </section>
+        </header>
+
+        <section class="post-content">
+            <div class="paragraph">
+<p>没事，无聊，想写一个圆形带加号的 Button ，并且有交互效果，打算全部用 Swift 写，没想到 Swift 使用还不熟练，就遇到了一点问题。</p>
+</div>
+<div class="paragraph">
+<p>问题是这样的</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import UIKit
+
+class JKAddButtonView: UIView {
+    var backgroundLayer: CALayer
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>这是在 Swift 中定义类属性的写法。上面代码的属性是一个不可选的 CALayer 类型的值，并且在 Swift 中，必须对其赋值，可以在属性定义时赋值，比如这样：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import UIKit
+
+class JKAddButtonView: UIView {
+    var backgroundLayer: CALayer = CALayer()
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>还可以在构造器中赋值，比如这样</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import UIKit
+
+class JKAddButtonView: UIView {
+    var backgroundLayer: CALayer
+
+    init(frame: CGRect, touchUpInside:() -&gt; Void) {
+        self.backgroundLayer = CALayer()
+        super.init()
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>(代码 1-1)</p>
+</div>
+<div class="paragraph">
+<p>如果是一个子类，还必须在确保所有不可选属性都被赋值以后调用父类的构造器。所以必须加上</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>super.init()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>在 objective-c 中，没有明确规定你必须在以什么样的顺序调用父类构造函数，Swift 则有这样的硬性规定，这么做的好处是可以保证属性初始化值的安全性。</p>
+</div>
+<div class="paragraph">
+<p>关于这方面的资料：
+<a href="http://numbbbbb.gitbooks.io/-the-swift-programming-language-/content/chapter2/14_Initialization.html" class="bare">http://numbbbbb.gitbooks.io/-the-swift-programming-language-/content/chapter2/14_Initialization.html</a></p>
+</div>
+<div class="paragraph">
+<p>然后我希望在给该按钮初始化时加入一个闭包参数，这样的话，每当按钮被点击到以后，直接调用闭包内的代码，这样就能看起来简单明朗。代码就像这样:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>var button = JKAddButtonView(frame: CGRectMake(20, 50, 50, 50)) { () -&gt; Void in
+        println("ok")
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>代码1-1后面的参数就是闭包了，那这个闭包要被后面的手指触摸事件调用到，必须有一个属性，这个属性应该是闭包类型，于是又加入了一行代码</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import UIKit
+
+class JKAddButtonView: UIView {
+    var backgroundLayer: CALayer
+    var callback:() -&gt; Void?
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>这时候，构造器就开始报错了，它说你必须在调用 super.init() 之前给闭包初始化值，这我就奇怪了，明明这个闭包是可选类型，为什么一定要这么做了，于是我就在网上问了一下，答案是这样的：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>()-&gt;Void       //代表 输入为空，返回 Void 的 closure
+
+()-&gt;Void?      //代表 输入为空，返回 Optional(Void) 的 closure
+
+( ()-&gt;Void )?  //代表 输入为空，返回 Void 的 Optional(closure)
+
+( ()-&gt;Void? )? //代表 输入为空，返回 Optional(Void) 的 Optional(closure)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>而我这样的定义，说明这个闭包属于返回 Optional(Void) 的 闭包，而不是一个可选的闭包，仅仅是返回值是可选类型而已。看完这个顿时我就明白了！！！</p>
+</div>
+<div class="paragraph">
+<p>于是把代码改成如下这样，问题解决！！</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>import UIKit
+
+class JKAddButtonView: UIView {
+    var backgroundLayer: CALayer
+    var callback:(() -&gt; Void)?
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Swift 的确不是一门简单的语言，想要熟练使用，还得花时间练习和看。</p>
+</div>
+<div class="paragraph">
+<p>对了，我这个按钮的效果图是这样的：</p>
+</div>
+<div class="paragraph">
+<p>image::https://github.com/J0HDev/blog/blob/gh-pages/images/buttondemo.gif?raw=true</p>
+</div>
+        </section>
+
+        <footer class="post-footer">
+
+
+            <figure class="author-image">
+                <a class="img" href="" style="background-image: url(https://avatars.githubusercontent.com/u/6302288?v=3)"><span class="hidden">J0hnnny's Picture</span></a>
+            </figure>
+
+            <section class="author">
+                <h4><a href="">J0hnnny</a></h4>
+
+                    <p>Read <a href="">more posts</a> by this author.</p>
+                <div class="author-meta">
+                    <span class="author-location icon-location">China</span>
+                    <span class="author-link icon-link"><a href="http://weibo.com/jcack">http://weibo.com/jcack</a></span>
+                </div>
+            </section>
+
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="https://twitter.com/share?text=15.4.27%20%E8%AE%B0%E4%B8%80%E4%B8%AASwift%E4%B8%AD%E7%8A%AF%E7%9A%84%E6%84%9A%E8%A0%A2%E7%9A%84%E9%94%99%E8%AF%AF&amp;url=https://j0hdev.github.io/blog/2015/04/27/a-stupid-error-in-swift.html"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://j0hdev.github.io/blog/2015/04/27/a-stupid-error-in-swift.html"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=https://j0hdev.github.io/blog/2015/04/27/a-stupid-error-in-swift.html"
+                   onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+        </footer>
+
+
+    </article>
+
+</main>
+
+
+
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="https://j0hdev.github.io/blog">J0hnny的博客</a> &copy; 2015</section>
+        <section class="poweredby">Proudly published with <a href="http://hubpress.io">HubPress</a></section>
+    </footer>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//j0hdev.github.io/blog/themes/Casper/assets/js/jquery.fitvids.js?v=1.0.0"></script>
+    <script type="text/javascript" src="//j0hdev.github.io/blog/themes/Casper/assets/js/index.js?v=1.0.0"></script>
+
+</body>
+</html>
