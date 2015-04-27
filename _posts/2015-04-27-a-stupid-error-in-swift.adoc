@@ -97,5 +97,4 @@ Swift 的确不是一门简单的语言，想要熟练使用，还得花时间�
 
 对了，我这个按钮的效果图是这样的：
 
-image::https://github.com/J0HDev/blog/blob/gh-pages/images/buttondemo.gif?raw=true
-[]
+image::https://github.com/J0HDev/blog/blob/gh-pages/images/buttondemo.gif?raw=true[]
