@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>15.4.24 整理 iOS 面试题 （四）</title>
+    <meta name="description" content="" />
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="//j0hdev.github.io/blog/themes/Casper/favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="//j0hdev.github.io/blog/themes/Casper/assets/css/screen.css?v=1.0.0" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+
+    <link rel="canonical" href="https://j0hdev.github.io/blog/2015/04/29/iOS-interview-part-4.html" />
+    
+    <meta property="og:site_name" content="J0hnny的博客" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="15.4.24 整理 iOS 面试题 （四）" />
+    <meta property="og:description" content="+(void)load; +(void)initialize；有什么用处？ + load 方法会在类被 import 进来之后被运行时调用 + initialize 方法则是类被第一次调用某方法后被运行时调用 他们的用处在于，你可以在类被使用之前，做一些预先的事情。 为什么其他语言里叫函数调用， objective c里则是给对象发消息（或者谈下对runtime的理解） 在 objective-c 中，整个面向对象就是由 runtime 支持的， runtime 是一组 C 函数，本质上调用某方法时，编译器会把调用某方法翻译成 C 函数的形式： [my..." />
+    <meta property="og:url" content="https://j0hdev.github.io/blog/2015/04/29/iOS-interview-part-4.html" />
+    <meta property="article:published_time" content="2015-04-28T16:00:00.000Z" />
+    <meta property="article:modified_time" content="2015-04-29T14:25:51.895Z" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="15.4.24 整理 iOS 面试题 （四）" />
+    <meta name="twitter:description" content="+(void)load; +(void)initialize；有什么用处？ + load 方法会在类被 import 进来之后被运行时调用 + initialize 方法则是类被第一次调用某方法后被运行时调用 他们的用处在于，你可以在类被使用之前，做一些预先的事情。 为什么其他语言里叫函数调用， objective c里则是给对象发消息（或者谈下对runtime的理解） 在 objective-c 中，整个面向对象就是由 runtime 支持的， runtime 是一组 C 函数，本质上调用某方法时，编译器会把调用某方法翻译成 C 函数的形式： [my..." />
+    <meta name="twitter:url" content="https://j0hdev.github.io/blog/2015/04/29/iOS-interview-part-4.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "J0hnny的博客",
+    "author": {
+        "@type": "Person",
+        "name": "J0hnnny",
+        "image": "https://avatars.githubusercontent.com/u/6302288?v=3",
+        "url": "undefined/author/undefined",
+        "sameAs": "http://weibo.com/jcack"
+    },
+    "headline": "15.4.24 整理 iOS 面试题 （四）",
+    "url": "https://j0hdev.github.io/blog/2015/04/29/iOS-interview-part-4.html",
+    "datePublished": "2015-04-28T16:00:00.000Z",
+    "dateModified": "2015-04-29T14:25:51.895Z",
+    "description": "+(void)load; +(void)initialize；有什么用处？ + load 方法会在类被 import 进来之后被运行时调用 + initialize 方法则是类被第一次调用某方法后被运行时调用 他们的用处在于，你可以在类被使用之前，做一些预先的事情。 为什么其他语言里叫函数调用， objective c里则是给对象发消息（或者谈下对runtime的理解） 在 objective-c 中，整个面向对象就是由 runtime 支持的， runtime 是一组 C 函数，本质上调用某方法时，编译器会把调用某方法翻译成 C 函数的形式： [my..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="J0hnny的博客" href="https://j0hdev.github.io/blog/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+</head>
+<body class="post-template">
+
+    
+
+
+<header class="main-header post-head no-cover">
+    <nav class="main-nav  clearfix">
+        <a class="back-button icon-arrow-left" href="https://j0hdev.github.io/blog">Home</a>
+        <!-- <a class="subscribe-button icon-feed" href="https://j0hdev.github.io/blog/rss/">Subscribe</a> -->
+    </nav>
+</header>
+
+<main class="content" role="main">
+
+    <article class="post">
+
+        <header class="post-header">
+            <h1 class="post-title">15.4.24 整理 iOS 面试题 （四）</h1>
+            <section class="post-meta">
+                <time class="post-date" datetime="2015-04-29">29 April 2015</time> 
+            </section>
+        </header>
+
+        <section class="post-content">
+            <div class="sect3">
+<h4 id="__void_load_void_initialize">+(void)load; +(void)initialize；有什么用处？</h4>
+<div class="paragraph">
+<p>+ load 方法会在类被 import 进来之后被运行时调用</p>
+</div>
+<div class="paragraph">
+<p>+ initialize 方法则是类被第一次调用某方法后被运行时调用</p>
+</div>
+<div class="paragraph">
+<p>他们的用处在于，你可以在类被使用之前，做一些预先的事情。</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="__objective_c_runtime">为什么其他语言里叫函数调用， objective c里则是给对象发消息（或者谈下对runtime的理解）</h4>
+<div class="paragraph">
+<p>在 objective-c 中，整个面向对象就是由 runtime 支持的， runtime 是一组 C 函数，本质上调用某方法时，编译器会把调用某方法翻译成 C 函数的形式：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>[myObj objMethed];
+//编译器会编译成如下样子
+objc_msgSend(myObj, @selector(objMethed), parameter);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>所以函数调用本质上就是如上代码的样子，所以 oc 函数调用本质就是发送消息。</p>
+</div>
+<div class="paragraph">
+<p>利用 runtime ，我们甚至可以动态的创建一个 Class 给这个 Class 加上属性，方法等等&#8230;&#8203;</p>
+</div>
+<div class="paragraph">
+<p>还有一种用法，有一些方法，可能我们看不到它们的实现，但是它确实存在一些 bug 或者其他不好的地方，那么我们可以把它的实现通过运行时更改，这招叫做 method swizzling</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_uiview_calayer">UIView和CALayer是啥关系？</h4>
+<div class="paragraph">
+<p>UIView 是对 CALayer 的封装，CALayer负责显示，UIView 为 CALayer 增加了一层交互。</p>
+</div>
+</div>
+        </section>
+
+        <footer class="post-footer">
+
+
+            <figure class="author-image">
+                <a class="img" href="" style="background-image: url(https://avatars.githubusercontent.com/u/6302288?v=3)"><span class="hidden">J0hnnny's Picture</span></a>
+            </figure>
+
+            <section class="author">
+                <h4><a href="">J0hnnny</a></h4>
+
+                    <p>Read <a href="">more posts</a> by this author.</p>
+                <div class="author-meta">
+                    <span class="author-location icon-location">China</span>
+                    <span class="author-link icon-link"><a href="http://weibo.com/jcack">http://weibo.com/jcack</a></span>
+                </div>
+            </section>
+
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="https://twitter.com/share?text=15.4.24%20%E6%95%B4%E7%90%86%20iOS%20%E9%9D%A2%E8%AF%95%E9%A2%98%20%EF%BC%88%E5%9B%9B%EF%BC%89&amp;url=https://j0hdev.github.io/blog/2015/04/29/iOS-interview-part-4.html"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://j0hdev.github.io/blog/2015/04/29/iOS-interview-part-4.html"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=https://j0hdev.github.io/blog/2015/04/29/iOS-interview-part-4.html"
+                   onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+        </footer>
+
+
+    </article>
+
+</main>
+
+
+
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="https://j0hdev.github.io/blog">J0hnny的博客</a> &copy; 2015</section>
+        <section class="poweredby">Proudly published with <a href="http://hubpress.io">HubPress</a></section>
+    </footer>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//j0hdev.github.io/blog/themes/Casper/assets/js/jquery.fitvids.js?v=1.0.0"></script>
+    <script type="text/javascript" src="//j0hdev.github.io/blog/themes/Casper/assets/js/index.js?v=1.0.0"></script>
+
+</body>
+</html>
