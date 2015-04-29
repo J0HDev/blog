@@ -1,0 +1,30 @@
+= 15.4.24 整理 iOS 面试题 （四）
+:hp-alt-title: iOS interview part 4
+
+====  +(void)load; +(void)initialize；有什么用处？
+
++ load 方法会在类被 import 进来之后被运行时调用
+
++ initialize 方法则是类被第一次调用某方法后被运行时调用
+
+他们的用处在于，你可以在类被使用之前，做一些预先的事情。
+
+==== 为什么其他语言里叫函数调用， objective c里则是给对象发消息（或者谈下对runtime的理解）
+
+在 objective-c 中，整个面向对象就是由 runtime 支持的， runtime 是一组 C 函数，本质上调用某方法时，编译器会把调用某方法翻译成 C 函数的形式：
+
+```
+[myObj objMethed];
+//编译器会编译成如下样子
+objc_msgSend(myObj, @selector(objMethed), parameter); 
+```
+
+所以函数调用本质上就是如上代码的样子，所以 oc 函数调用本质就是发送消息。
+
+利用 runtime ，我们甚至可以动态的创建一个 Class 给这个 Class 加上属性，方法等等...
+
+还有一种用法，有一些方法，可能我们看不到它们的实现，但是它确实存在一些 bug 或者其他不好的地方，那么我们可以把它的实现通过运行时更改，这招叫做 method swizzling
+
+==== UIView和CALayer是啥关系？
+
+UIView 是对 CALayer 的封装，CALayer负责显示，UIView 为 CALayer 增加了一层交互。
