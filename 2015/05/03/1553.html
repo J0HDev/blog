@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>15.5.3 实现一个烂大街的个人主页界面</title>
+    <meta name="description" content="" />
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="//j0hdev.github.io/blog/themes/Casper/favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="//j0hdev.github.io/blog/themes/Casper/assets/css/screen.css?v=1.0.0" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+
+    <link rel="canonical" href="https://j0hdev.github.io/blog/2015/05/03/1553.html" />
+    
+    <meta property="og:site_name" content="J0hnny的博客" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="15.5.3 实现一个烂大街的个人主页界面" />
+    <meta property="og:description" content="很多 APP 都会采用的个人主页的界面设计就是，先来一张图片作为背景，然后在这个背景上放上头像，昵称，个人信息等等&amp;#8230;&amp;#8203; 我就照搬实现了如下的界面，（大致样子） 开始 图片底下的那个玩意是 UITableView 所以一开始，你需要创建它。 UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.bounds]; tableView.delegate = self; tableView.dataSource = self; 然后你需要为这个 UIT..." />
+    <meta property="og:url" content="https://j0hdev.github.io/blog/2015/05/03/1553.html" />
+    <meta property="article:published_time" content="2015-05-02T16:00:00.000Z" />
+    <meta property="article:modified_time" content="2015-05-03T12:46:18.083Z" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="15.5.3 实现一个烂大街的个人主页界面" />
+    <meta name="twitter:description" content="很多 APP 都会采用的个人主页的界面设计就是，先来一张图片作为背景，然后在这个背景上放上头像，昵称，个人信息等等&amp;#8230;&amp;#8203; 我就照搬实现了如下的界面，（大致样子） 开始 图片底下的那个玩意是 UITableView 所以一开始，你需要创建它。 UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.bounds]; tableView.delegate = self; tableView.dataSource = self; 然后你需要为这个 UIT..." />
+    <meta name="twitter:url" content="https://j0hdev.github.io/blog/2015/05/03/1553.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "J0hnny的博客",
+    "author": {
+        "@type": "Person",
+        "name": "J0hnnny",
+        "image": "https://avatars.githubusercontent.com/u/6302288?v=3",
+        "url": "undefined/author/undefined",
+        "sameAs": "http://weibo.com/jcack"
+    },
+    "headline": "15.5.3 实现一个烂大街的个人主页界面",
+    "url": "https://j0hdev.github.io/blog/2015/05/03/1553.html",
+    "datePublished": "2015-05-02T16:00:00.000Z",
+    "dateModified": "2015-05-03T12:46:18.083Z",
+    "description": "很多 APP 都会采用的个人主页的界面设计就是，先来一张图片作为背景，然后在这个背景上放上头像，昵称，个人信息等等&amp;#8230;&amp;#8203; 我就照搬实现了如下的界面，（大致样子） 开始 图片底下的那个玩意是 UITableView 所以一开始，你需要创建它。 UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.bounds]; tableView.delegate = self; tableView.dataSource = self; 然后你需要为这个 UIT..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="J0hnny的博客" href="https://j0hdev.github.io/blog/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+</head>
+<body class="post-template">
+
+    
+
+
+<header class="main-header post-head no-cover">
+    <nav class="main-nav  clearfix">
+        <a class="back-button icon-arrow-left" href="https://j0hdev.github.io/blog">Home</a>
+        <!-- <a class="subscribe-button icon-feed" href="https://j0hdev.github.io/blog/rss/">Subscribe</a> -->
+    </nav>
+</header>
+
+<main class="content" role="main">
+
+    <article class="post">
+
+        <header class="post-header">
+            <h1 class="post-title">15.5.3 实现一个烂大街的个人主页界面</h1>
+            <section class="post-meta">
+                <time class="post-date" datetime="2015-05-03">03 May 2015</time> 
+            </section>
+        </header>
+
+        <section class="post-content">
+            <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>很多 APP 都会采用的个人主页的界面设计就是，先来一张图片作为背景，然后在这个背景上放上头像，昵称，个人信息等等&#8230;&#8203;</p>
+</div>
+<div class="paragraph">
+<p>我就照搬实现了如下的界面，（大致样子）</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/J0HDev/blog/blob/gh-pages/images/homepage.gif?raw=true" alt="homepage.gif?raw=true">
+</div>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="__">开始</h5>
+<div class="paragraph">
+<p>图片底下的那个玩意是 <code><code>UITableView</code></code> 所以一开始，你需要创建它。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.bounds];
+tableView.delegate = self;
+tableView.dataSource = self;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>然后你需要为这个 <code><code>UITableView</code></code> 添加一个 <code><code>tableHeaderView</code></code>，其实这个家伙只是为了给图片撑出一个位置来而已。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.bounds];
+tableView.delegate = self;
+tableView.dataSource = self;
+
+UIView *tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(tableView.frame), kImageViewHeight)];
+tableView.backgroundColor = [UIColor clearColor];
+tableView.tableHeaderView = tableHeaderView;
+
+[self.view addSubview:tableView];</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>注意：这里必须把 <code><code>tableView</code></code>的 <code><code>backgroundColor</code></code> 设为 <code><code>clearColor</code></code>，这样一来，整个<code><code>tableView</code></code>的背景色就没有了，就能使得<code><code>tableHeaderView</code></code>能够透视到下面的视图，然后添加一个<code><code>UIImageView</code></code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.bounds];
+tableView.delegate = self;
+tableView.dataSource = self;
+
+UIView *tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(tableView.frame), kImageViewHeight)];
+tableView.backgroundColor = [UIColor clearColor];
+tableView.tableHeaderView = tableHeaderView;
+
+[self.view addSubview:tableView];
+
+UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), kImageViewHeight)];
+imageView.image = [UIImage imageNamed:@"image.jpg"];
+imageView.clipsToBounds = YES;
+imageView.contentMode = UIViewContentModeScaleAspectFill;
+
+[self.view insertSubview:imageView belowSubview:tableView];</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>把这个<code><code>UIImageView</code></code>放到整个<code><code>UITableView</code></code>下面，这样就能透过<code><code>UITableView</code></code>看到这张背景图片了。</p>
+</div>
+<div class="paragraph">
+<p>编译运行就能看到，滚动<code><code>TableView</code></code>时，这个<code><code>TableView</code></code>能罩住这个<code><code>ImageView</code></code>的效果。</p>
+</div>
+<div class="paragraph">
+<p>很多 APP 的主页都有这样的效果。</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="___2">下面是放大背景图的实现</h5>
+<div class="paragraph">
+<p>首先你需要判断，用户往下滚动，并已经到顶了，这个判断很简单，实现<code><code>scrollViewDidScroll:</code></code> 这个代理方法，使用 <code><code>scrollView.contentOffset.y</code></code>这个值来判断，如果到顶这个值会小于0，所以实现放大的关键代码就是下面这样：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+
+    CGFloat imageScaling = 150.f;
+
+    if (scrollView.contentOffset.y &lt; 0) {
+        CGAffineTransform transform = CGAffineTransformMakeScale(1 - (scrollView.contentOffset.y / imageScaling), 1 - (scrollView.contentOffset.y / imageScaling));
+        self.imageView.transform = transform;
+    }else{
+        self.imageView.transform = CGAffineTransformMakeScale(1, 1);
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+        </section>
+
+        <footer class="post-footer">
+
+
+            <figure class="author-image">
+                <a class="img" href="" style="background-image: url(https://avatars.githubusercontent.com/u/6302288?v=3)"><span class="hidden">J0hnnny's Picture</span></a>
+            </figure>
+
+            <section class="author">
+                <h4><a href="">J0hnnny</a></h4>
+
+                    <p>Read <a href="">more posts</a> by this author.</p>
+                <div class="author-meta">
+                    <span class="author-location icon-location">China</span>
+                    <span class="author-link icon-link"><a href="http://weibo.com/jcack">http://weibo.com/jcack</a></span>
+                </div>
+            </section>
+
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="https://twitter.com/share?text=15.5.3%20%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E7%83%82%E5%A4%A7%E8%A1%97%E7%9A%84%E4%B8%AA%E4%BA%BA%E4%B8%BB%E9%A1%B5%E7%95%8C%E9%9D%A2&amp;url=https://j0hdev.github.io/blog/2015/05/03/1553.html"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://j0hdev.github.io/blog/2015/05/03/1553.html"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=https://j0hdev.github.io/blog/2015/05/03/1553.html"
+                   onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+        </footer>
+
+
+    </article>
+
+</main>
+
+
+
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="https://j0hdev.github.io/blog">J0hnny的博客</a> &copy; 2015</section>
+        <section class="poweredby">Proudly published with <a href="http://hubpress.io">HubPress</a></section>
+    </footer>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//j0hdev.github.io/blog/themes/Casper/assets/js/jquery.fitvids.js?v=1.0.0"></script>
+    <script type="text/javascript" src="//j0hdev.github.io/blog/themes/Casper/assets/js/index.js?v=1.0.0"></script>
+
+</body>
+</html>
