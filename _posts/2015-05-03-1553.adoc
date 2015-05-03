@@ -1,0 +1,78 @@
+= 15.5.3 实现一个烂大街的个人主页界面
+:hp-alt-title:implement homepage user interface
+
+很多 APP 都会采用的个人主页的界面设计就是，先来一张图片作为背景，然后在这个背景上放上头像，昵称，个人信息等等...
+
+我就照搬实现了如下的界面，（大致样子）
+
+image::https://github.com/J0HDev/blog/blob/gh-pages/images/homepage.gif?raw=true[]
+
+===== 开始
+
+图片底下的那个玩意是 ```UITableView``` 所以一开始，你需要创建它。
+
+```
+UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.bounds];
+tableView.delegate = self;
+tableView.dataSource = self;
+```
+
+然后你需要为这个 ```UITableView``` 添加一个 ```tableHeaderView```，其实这个家伙只是为了给图片撑出一个位置来而已。
+
+```
+UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.bounds];
+tableView.delegate = self;
+tableView.dataSource = self;
+
+UIView *tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(tableView.frame), kImageViewHeight)];
+tableView.backgroundColor = [UIColor clearColor];
+tableView.tableHeaderView = tableHeaderView;
+    
+[self.view addSubview:tableView];
+
+```
+
+注意：这里必须把 ```tableView```的 ```backgroundColor``` 设为 ```clearColor```，这样一来，整个```tableView```的背景色就没有了，就能使得```tableHeaderView```能够透视到下面的视图，然后添加一个```UIImageView```
+
+```
+UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.bounds];
+tableView.delegate = self;
+tableView.dataSource = self;
+
+UIView *tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(tableView.frame), kImageViewHeight)];
+tableView.backgroundColor = [UIColor clearColor];
+tableView.tableHeaderView = tableHeaderView;
+    
+[self.view addSubview:tableView];
+
+UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), kImageViewHeight)];
+imageView.image = [UIImage imageNamed:@"image.jpg"];
+imageView.clipsToBounds = YES;
+imageView.contentMode = UIViewContentModeScaleAspectFill;
+
+[self.view insertSubview:imageView belowSubview:tableView];
+```
+
+把这个```UIImageView```放到整个```UITableView```下面，这样就能透过```UITableView```看到这张背景图片了。
+
+编译运行就能看到，滚动```TableView```时，这个```TableView```能罩住这个```ImageView```的效果。
+
+很多 APP 的主页都有这样的效果。
+
+===== 下面是放大背景图的实现
+
+首先你需要判断，用户往下滚动，并已经到顶了，这个判断很简单，实现```scrollViewDidScroll:``` 这个代理方法，使用 ```scrollView.contentOffset.y```这个值来判断，如果到顶这个值会小于0，所以实现放大的关键代码就是下面这样：
+
+```
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+	
+    CGFloat imageScaling = 150.f;
+    
+    if (scrollView.contentOffset.y < 0) {
+        CGAffineTransform transform = CGAffineTransformMakeScale(1 - (scrollView.contentOffset.y / imageScaling), 1 - (scrollView.contentOffset.y / imageScaling));
+        self.imageView.transform = transform;
+    }else{
+        self.imageView.transform = CGAffineTransformMakeScale(1, 1);
+    }
+}
+```
