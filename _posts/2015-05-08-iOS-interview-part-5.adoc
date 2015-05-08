@@ -1,4 +1,4 @@
-= 15.4.29 整理 iOS 面试题 （五）
+= 15.5.8 整理 iOS 面试题 （五）
 :hp-alt-title: iOS interview part 5
 
 跳过一些搞不定的。。
@@ -14,6 +14,10 @@
 ===== GCD里面有哪几种Queue？你自己建立过串行queue吗？背后的线程模型是什么样的？
 
 一种串行队列（Serial），一种并行队列（Concurrent），一种是全局队列，一种是主队列（更新UI）
+
+http://codingobjc.com/blog/2013/05/07/gcdshi-yong-xiang-jie-shang-pian/
+
+介绍GCD的文章
 
 ```
 dispatch_queue_t queue = dispatch_queue_create(“name”, DISPATCH_QUEUE_SERIAL);
