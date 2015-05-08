@@ -1,0 +1,36 @@
+= 15.4.29 整理 iOS 面试题 （五）
+:hp-alt-title: iOS interview part 5
+
+跳过一些搞不定的。。
+
+===== loadView是干嘛用的
+
+这个是方法是纯手工（意味着没有xib、StoryBoard）写代码时候负责写UI的。
+
+===== viewWillLayoutSubView 
+
+一般屏幕旋转时候会被调用，用来重新布局 Views。
+
+===== GCD里面有哪几种Queue？你自己建立过串行queue吗？背后的线程模型是什么样的？
+
+一种串行队列（Serial），一种并行队列（Concurrent），一种是全局队列，一种是主队列（更新UI）
+
+```
+dispatch_queue_t queue = dispatch_queue_create(“name”, DISPATCH_QUEUE_SERIAL);
+```
+
+===== 用过coredata或者sqlite吗？读写是分线程的吗？遇到过死锁没？咋解决的？
+
+用过，没分线程，没遇过死锁。。。
+
+===== http的post和get啥区别？
+
+http://www.w3school.com.cn/tags/html_ref_httpmethods.asp
+
+非常详细的对比
+
+
+其余没写的都是搞不定的。
+
+暂完
+
