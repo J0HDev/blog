@@ -1,0 +1,191 @@
+= 15.6.15 UICollectionViewLayout实践——石工布局（瀑布流布局）的实现
+:hp-alt-title: collectionview layout by tutorial
+
+=== 石工(瀑布流)布局
+
+石工布局就是宽度相同高度不同的一种布局，国内的网站`堆糖`就是这样的布局，他们的 APP 也是这样的布局，国外也有网站这样布局比如`Pinterest`
+
+=== 具体实现
+首先新建一个工程，并且新建一个`UICollectionViewLayout`的子类，具体过程就不截图和废话了，是个人都会。。。
+
+在该类的`.h`中添加如下代码：
+
+```
+#import <UIKit/UIKit.h>
+
+@class WYCollectionViewWaterFullLayout;
+@protocol WYCollectionViewDelegateLayout <NSObject>
+@required
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(WYCollectionViewWaterFullLayout *)layout heightForCellAtIndexPath:(NSIndexPath *)indexPath;
+@end
+
+@interface WYCollectionViewWaterFullLayout : UICollectionViewLayout
+
+@property (nonatomic, assign) NSInteger numberOfColumns; //一行几列
+@property (nonatomic, assign) CGFloat cellSpacing; //cell间距
+@property (nonatomic, assign) CGFloat topMargin; //顶部间距
+@property (nonatomic, weak) id<WYCollectionViewDelegateLayout> delegate;
+
+@end
+```
+
+最顶上是一个`protocol`这个`protocol`要求使用者返回`indexPath`对应Cell的高度，这样才能计算整个`collectionViewCell`的布局
+
+下面的属性就不过多说明了，看注释即可。
+
+接下来`.m`文件需要申明一些私有属性
+
+```
+@interface WYCollectionViewWaterFullLayout ()
+
+@property (nonatomic, strong) NSMutableDictionary *lastYFromColumn;
+@property (nonatomic, strong) NSMutableDictionary *cellAttributes;
+
+@end
+```
+
+`lastYFromColumn`这个属性代表每一行的所有列的高度，但是它仅仅存放一行中每列的高，每次更新到下一行就把上一行的这些高替换成下一行的，这些高用来计算当前行中列的`y轴`，当然是在计算完毕以后替换的。
+
+
+`cellAttributes`这里存放所有的`UICollectionViewLayoutAttributes`，它存放当前Cell的信息，这里主要更改的是该对象的`frame`属性，用来布局。
+
+在该类中，需要重写的父类方法有下面三种:
+
+* `- (void)prepareLayout`
+* `- (NSArray *)layoutAttributesForElementsInRect:`
+* `- (CGSize)collectionViewContentSize`
+
+第一个方法是在实际布局前做一些计算工作，所有等一下所有的计算都在这里完成
+
+第二个方法返回屏幕可视区域内所有的`UICollectionViewLayoutAttributes`对象
+
+第三个方法返回`UICollectionView`的`contentSize`属性的值
+
+首先给三个属性设置默认值，然后初始化另外两个属性
+
+```
+if (self.numberOfColumns == 0) {
+    self.numberOfColumns = 3;
+}
+if (self.cellSpacing == 0.f) {
+    self.cellSpacing = 10.f;
+}
+if (self.topMargin == 0) {
+    self.topMargin = 20;
+}
+
+self.lastYFromColumn = [NSMutableDictionary dictionaryWithCapacity:self.numberOfColumns];
+
+self.cellAttributes = [NSMutableDictionary dictionary];
+    
+```
+
+既然已经知道`lastYFromColumn`最多存`numberOfColumns`个元素，那么就用`dictionaryWithCapacity:`来分配内存好了。
+
+然后需要一个临时变量，记录当前是第几列，和一个是否为第一行的标记，留着一会有用处。然后计算每一个Cell的宽度
+
+```
+NSInteger currentColumn = 0;
+BOOL firstLine = YES;
+
+CGFloat collectionViewWidth = CGRectGetWidth(self.collectionView.frame);
+CGFloat allSpacing = self.cellSpacing * (self.numberOfColumns + 1);
+CGFloat allCellWidth = collectionViewWidth - allSpacing;
+CGFloat cellWidth = allCellWidth / self.numberOfColumns;
+```
+然后开始遍历每一个`section`里边的每一个`Cell`
+
+```
+NSInteger section = self.collectionView.numberOfSections;
+for (NSInteger s = 0; s < section; s++){
+  NSInteger row = [self.collectionView numberOfItemsInSection:section];
+  for (NSInteger r = 0; r < row; r++){
+  	//..
+  }
+}
+```
+
+在循环体中开始计算：
+
+```
+//计算每一个Cell的x
+CGFloat x = self.cellSpacing + (self.cellSpacing + cellWidth) * currentColumn;
+//计算每一个Cell的y
+CGFloat y = 0;
+if (firstLine) {
+	y = [self.lastYFromColumn[@(currentColumn)] doubleValue] + self.topMargin;
+}else{
+	y = [self.lastYFromColumn[@(currentColumn)] doubleValue];
+}
+```
+
+`y轴`计算首先要确顶当前是不是第一行，第一行要留一定的边距，这个边距由`topMargin`决定
+
+有了宽度和xy轴接着就差高度了，高度从代理中拿，然后获取`UICollectionViewLayoutAttributes`对象，更新他们的`frame`。
+
+```
+//获取由delegate来的height
+CGFloat cellHeight = [((id<WYCollectionViewDelegateLayout>)self.collectionView.delegate) collectionView:self.collectionView layout:self heightForCellAtIndexPath:indexPath];
+            
+//更新每一个cell的frame
+UICollectionViewLayoutAttributes *cellAttributes = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
+
+cellAttributes.frame = CGRectMake(x, y, cellWidth, cellHeight);
+```
+
+然后更新`y轴`这个值，这个值在来得基础上加`cellHeight`和`cellSpacing`这个值就是下一行，这一列的`y轴`，并把它保存在lastYFromColumn字典中。
+
+然后更新currentColumn这个值，让它值为下一列，还需要判断，如果下一列超出了`numberOfColumns`则标记为0，表示下一行第0列，并且`firstLine`设为`NO`。
+
+```
+//存放当前列的高度，为下一行该列的y做准备
+y += cellHeight;
+y += self.cellSpacing;
+self.lastYFromColumn[@(currentColumn)] = @(y);
+
+//递增表示下一列
+currentColumn++;
+if (currentColumn == self.numberOfColumns) {
+    currentColumn = 0;
+    firstLine = NO;
+}
+```
+
+最后保存所有的`cellAttributes`
+```
+//保存所有的Cell Attributes
+self.cellAttributes[indexPath] = cellAttributes;
+```
+
+然后就是`- (NSArray *)layoutAttributesForElementsInRect:`这个方法，用CGRectIntersectsRect()函数筛选出可见区域内的`cellAttributes`并返回，其实也可以把所有`cellAttributes`一起返回，但是没在可见区域的`cellAttributes`就浪费了，所以没必要这么做。
+
+```
+- (NSArray *)layoutAttributesForElementsInRect:(CGRect)rect {
+    NSMutableArray *inRectCellAttributes = [NSMutableArray array];
+    [self.cellAttributes enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *indexPath, UICollectionViewLayoutAttributes *cellAttributes, BOOL *stop) {
+        //判断当前cellAttributes的frame是否在屏幕内
+        if (CGRectIntersectsRect(rect, cellAttributes.frame)) {
+            [inRectCellAttributes addObject:cellAttributes];
+        }
+    }];
+    return inRectCellAttributes;
+}
+```
+
+然后返回`ContentSize`，这里只要找出`lastYFromColumn`最大的作为`y轴`即可。
+
+```
+- (CGSize)collectionViewContentSize {
+    CGFloat max = 0;
+    for (NSNumber *y in self.lastYFromColumn.allValues) {
+        if (y.doubleValue > max) {
+            max = y.doubleValue;
+        }
+    }
+    return CGSizeMake(CGRectGetWidth(self.collectionView.frame), max);
+}
+```
+
+=== 最终效果
+image::https://github.com/J0HDev/blog/blob/gh-pages/images/iOS%20Simulator%20Screen%20Shot%202015%E5%B9%B46%E6%9C%8815%E6%97%A5%20%E4%B8%8B%E5%8D%886.17.34.png?raw=true[150,300]
+
