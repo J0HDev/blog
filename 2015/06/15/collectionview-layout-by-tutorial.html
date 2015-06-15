@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>15.6.15 UICollectionViewLayout实践——石工布局（瀑布流布局）的实现</title>
+    <meta name="description" content="" />
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="//j0hdev.github.io/blog/themes/Casper/favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="//j0hdev.github.io/blog/themes/Casper/assets/css/screen.css?v=1.0.0" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+
+    <link rel="canonical" href="https://j0hdev.github.io/blog/2015/06/15/collectionview-layout-by-tutorial.html" />
+    
+    <meta property="og:site_name" content="J0hnny的博客" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="15.6.15 UICollectionViewLayout实践——石工布局（瀑布流布局）的实现" />
+    <meta property="og:description" content="石工(瀑布流)布局 石工布局就是宽度相同高度不同的一种布局，国内的网站堆糖就是这样的布局，他们的 APP 也是这样的布局，国外也有网站这样布局比如Pinterest 具体实现 首先新建一个工程，并且新建一个UICollectionViewLayout的子类，具体过程就不截图和废话了，是个人都会。。。 在该类的.h中添加如下代码： #import &amp;lt;UIKit/UIKit.h&amp;gt; @class WYCollectionViewWaterFullLayout; @protocol WYCollectionViewDelegateLayout &amp;l..." />
+    <meta property="og:url" content="https://j0hdev.github.io/blog/2015/06/15/collectionview-layout-by-tutorial.html" />
+    <meta property="article:published_time" content="2015-06-14T16:00:00.000Z" />
+    <meta property="article:modified_time" content="2015-06-15T10:20:38.113Z" />
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="15.6.15 UICollectionViewLayout实践——石工布局（瀑布流布局）的实现" />
+    <meta name="twitter:description" content="石工(瀑布流)布局 石工布局就是宽度相同高度不同的一种布局，国内的网站堆糖就是这样的布局，他们的 APP 也是这样的布局，国外也有网站这样布局比如Pinterest 具体实现 首先新建一个工程，并且新建一个UICollectionViewLayout的子类，具体过程就不截图和废话了，是个人都会。。。 在该类的.h中添加如下代码： #import &amp;lt;UIKit/UIKit.h&amp;gt; @class WYCollectionViewWaterFullLayout; @protocol WYCollectionViewDelegateLayout &amp;l..." />
+    <meta name="twitter:url" content="https://j0hdev.github.io/blog/2015/06/15/collectionview-layout-by-tutorial.html" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "publisher": "J0hnny的博客",
+    "author": {
+        "@type": "Person",
+        "name": "J0hnnny",
+        "image": "https://avatars.githubusercontent.com/u/6302288?v=3",
+        "url": "undefined/author/undefined",
+        "sameAs": "http://weibo.com/jcack"
+    },
+    "headline": "15.6.15 UICollectionViewLayout实践——石工布局（瀑布流布局）的实现",
+    "url": "https://j0hdev.github.io/blog/2015/06/15/collectionview-layout-by-tutorial.html",
+    "datePublished": "2015-06-14T16:00:00.000Z",
+    "dateModified": "2015-06-15T10:20:38.113Z",
+    "description": "石工(瀑布流)布局 石工布局就是宽度相同高度不同的一种布局，国内的网站堆糖就是这样的布局，他们的 APP 也是这样的布局，国外也有网站这样布局比如Pinterest 具体实现 首先新建一个工程，并且新建一个UICollectionViewLayout的子类，具体过程就不截图和废话了，是个人都会。。。 在该类的.h中添加如下代码： #import &amp;lt;UIKit/UIKit.h&amp;gt; @class WYCollectionViewWaterFullLayout; @protocol WYCollectionViewDelegateLayout &amp;l..."
+}
+    </script>
+
+    <meta name="generator" content="Ghost ?" />
+    <link rel="alternate" type="application/rss+xml" title="J0hnny的博客" href="https://j0hdev.github.io/blog/rss" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css">
+</head>
+<body class="post-template">
+
+    
+
+
+<header class="main-header post-head no-cover">
+    <nav class="main-nav  clearfix">
+        <a class="back-button icon-arrow-left" href="https://j0hdev.github.io/blog">Home</a>
+        <!-- <a class="subscribe-button icon-feed" href="https://j0hdev.github.io/blog/rss/">Subscribe</a> -->
+    </nav>
+</header>
+
+<main class="content" role="main">
+
+    <article class="post">
+
+        <header class="post-header">
+            <h1 class="post-title">15.6.15 UICollectionViewLayout实践——石工布局（瀑布流布局）的实现</h1>
+            <section class="post-meta">
+                <time class="post-date" datetime="2015-06-15">15 June 2015</time> 
+            </section>
+        </header>
+
+        <section class="post-content">
+            <div class="sect2">
+<h3 id="__">石工(瀑布流)布局</h3>
+<div class="paragraph">
+<p>石工布局就是宽度相同高度不同的一种布局，国内的网站<code>堆糖</code>就是这样的布局，他们的 APP 也是这样的布局，国外也有网站这样布局比如<code>Pinterest</code></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___2">具体实现</h3>
+<div class="paragraph">
+<p>首先新建一个工程，并且新建一个<code>UICollectionViewLayout</code>的子类，具体过程就不截图和废话了，是个人都会。。。</p>
+</div>
+<div class="paragraph">
+<p>在该类的<code>.h</code>中添加如下代码：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>#import &lt;UIKit/UIKit.h&gt;
+
+@class WYCollectionViewWaterFullLayout;
+@protocol WYCollectionViewDelegateLayout &lt;NSObject&gt;
+@required
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(WYCollectionViewWaterFullLayout *)layout heightForCellAtIndexPath:(NSIndexPath *)indexPath;
+@end
+
+@interface WYCollectionViewWaterFullLayout : UICollectionViewLayout
+
+@property (nonatomic, assign) NSInteger numberOfColumns; //一行几列
+@property (nonatomic, assign) CGFloat cellSpacing; //cell间距
+@property (nonatomic, assign) CGFloat topMargin; //顶部间距
+@property (nonatomic, weak) id&lt;WYCollectionViewDelegateLayout&gt; delegate;
+
+@end</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>最顶上是一个<code>protocol</code>这个<code>protocol</code>要求使用者返回<code>indexPath</code>对应Cell的高度，这样才能计算整个<code>collectionViewCell</code>的布局</p>
+</div>
+<div class="paragraph">
+<p>下面的属性就不过多说明了，看注释即可。</p>
+</div>
+<div class="paragraph">
+<p>接下来<code>.m</code>文件需要申明一些私有属性</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>@interface WYCollectionViewWaterFullLayout ()
+
+@property (nonatomic, strong) NSMutableDictionary *lastYFromColumn;
+@property (nonatomic, strong) NSMutableDictionary *cellAttributes;
+
+@end</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>lastYFromColumn</code>这个属性代表每一行的所有列的高度，但是它仅仅存放一行中每列的高，每次更新到下一行就把上一行的这些高替换成下一行的，这些高用来计算当前行中列的<code>y轴</code>，当然是在计算完毕以后替换的。</p>
+</div>
+<div class="paragraph">
+<p><code>cellAttributes</code>这里存放所有的<code>UICollectionViewLayoutAttributes</code>，它存放当前Cell的信息，这里主要更改的是该对象的<code>frame</code>属性，用来布局。</p>
+</div>
+<div class="paragraph">
+<p>在该类中，需要重写的父类方法有下面三种:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>- (void)prepareLayout</code></p>
+</li>
+<li>
+<p><code>- (NSArray *)layoutAttributesForElementsInRect:</code></p>
+</li>
+<li>
+<p><code>- (CGSize)collectionViewContentSize</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>第一个方法是在实际布局前做一些计算工作，所有等一下所有的计算都在这里完成</p>
+</div>
+<div class="paragraph">
+<p>第二个方法返回屏幕可视区域内所有的<code>UICollectionViewLayoutAttributes</code>对象</p>
+</div>
+<div class="paragraph">
+<p>第三个方法返回<code>UICollectionView</code>的<code>contentSize</code>属性的值</p>
+</div>
+<div class="paragraph">
+<p>首先给三个属性设置默认值，然后初始化另外两个属性</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>if (self.numberOfColumns == 0) {
+    self.numberOfColumns = 3;
+}
+if (self.cellSpacing == 0.f) {
+    self.cellSpacing = 10.f;
+}
+if (self.topMargin == 0) {
+    self.topMargin = 20;
+}
+
+self.lastYFromColumn = [NSMutableDictionary dictionaryWithCapacity:self.numberOfColumns];
+
+self.cellAttributes = [NSMutableDictionary dictionary];</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>既然已经知道<code>lastYFromColumn</code>最多存<code>numberOfColumns</code>个元素，那么就用<code>dictionaryWithCapacity:</code>来分配内存好了。</p>
+</div>
+<div class="paragraph">
+<p>然后需要一个临时变量，记录当前是第几列，和一个是否为第一行的标记，留着一会有用处。然后计算每一个Cell的宽度</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>NSInteger currentColumn = 0;
+BOOL firstLine = YES;
+
+CGFloat collectionViewWidth = CGRectGetWidth(self.collectionView.frame);
+CGFloat allSpacing = self.cellSpacing * (self.numberOfColumns + 1);
+CGFloat allCellWidth = collectionViewWidth - allSpacing;
+CGFloat cellWidth = allCellWidth / self.numberOfColumns;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>然后开始遍历每一个<code>section</code>里边的每一个<code>Cell</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>NSInteger section = self.collectionView.numberOfSections;
+for (NSInteger s = 0; s &lt; section; s++){
+  NSInteger row = [self.collectionView numberOfItemsInSection:section];
+  for (NSInteger r = 0; r &lt; row; r++){
+  	//..
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>在循环体中开始计算：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>//计算每一个Cell的x
+CGFloat x = self.cellSpacing + (self.cellSpacing + cellWidth) * currentColumn;
+//计算每一个Cell的y
+CGFloat y = 0;
+if (firstLine) {
+	y = [self.lastYFromColumn[@(currentColumn)] doubleValue] + self.topMargin;
+}else{
+	y = [self.lastYFromColumn[@(currentColumn)] doubleValue];
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>y轴</code>计算首先要确顶当前是不是第一行，第一行要留一定的边距，这个边距由<code>topMargin</code>决定</p>
+</div>
+<div class="paragraph">
+<p>有了宽度和xy轴接着就差高度了，高度从代理中拿，然后获取<code>UICollectionViewLayoutAttributes</code>对象，更新他们的<code>frame</code>。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>//获取由delegate来的height
+CGFloat cellHeight = [((id&lt;WYCollectionViewDelegateLayout&gt;)self.collectionView.delegate) collectionView:self.collectionView layout:self heightForCellAtIndexPath:indexPath];
+
+//更新每一个cell的frame
+UICollectionViewLayoutAttributes *cellAttributes = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
+
+cellAttributes.frame = CGRectMake(x, y, cellWidth, cellHeight);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>然后更新<code>y轴</code>这个值，这个值在来得基础上加<code>cellHeight</code>和<code>cellSpacing</code>这个值就是下一行，这一列的<code>y轴</code>，并把它保存在lastYFromColumn字典中。</p>
+</div>
+<div class="paragraph">
+<p>然后更新currentColumn这个值，让它值为下一列，还需要判断，如果下一列超出了<code>numberOfColumns</code>则标记为0，表示下一行第0列，并且<code>firstLine</code>设为<code>NO</code>。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>//存放当前列的高度，为下一行该列的y做准备
+y += cellHeight;
+y += self.cellSpacing;
+self.lastYFromColumn[@(currentColumn)] = @(y);
+
+//递增表示下一列
+currentColumn++;
+if (currentColumn == self.numberOfColumns) {
+    currentColumn = 0;
+    firstLine = NO;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>最后保存所有的<code>cellAttributes</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>//保存所有的Cell Attributes
+self.cellAttributes[indexPath] = cellAttributes;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>然后就是<code>- (NSArray *)layoutAttributesForElementsInRect:</code>这个方法，用CGRectIntersectsRect()函数筛选出可见区域内的<code>cellAttributes</code>并返回，其实也可以把所有<code>cellAttributes</code>一起返回，但是没在可见区域的<code>cellAttributes</code>就浪费了，所以没必要这么做。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>- (NSArray *)layoutAttributesForElementsInRect:(CGRect)rect {
+    NSMutableArray *inRectCellAttributes = [NSMutableArray array];
+    [self.cellAttributes enumerateKeysAndObjectsUsingBlock:^(NSIndexPath *indexPath, UICollectionViewLayoutAttributes *cellAttributes, BOOL *stop) {
+        //判断当前cellAttributes的frame是否在屏幕内
+        if (CGRectIntersectsRect(rect, cellAttributes.frame)) {
+            [inRectCellAttributes addObject:cellAttributes];
+        }
+    }];
+    return inRectCellAttributes;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>然后返回<code>ContentSize</code>，这里只要找出<code>lastYFromColumn</code>最大的作为<code>y轴</code>即可。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>- (CGSize)collectionViewContentSize {
+    CGFloat max = 0;
+    for (NSNumber *y in self.lastYFromColumn.allValues) {
+        if (y.doubleValue &gt; max) {
+            max = y.doubleValue;
+        }
+    }
+    return CGSizeMake(CGRectGetWidth(self.collectionView.frame), max);
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___3">最终效果</h3>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/J0HDev/blog/blob/gh-pages/images/iOS%20Simulator%20Screen%20Shot%202015%E5%B9%B46%E6%9C%8815%E6%97%A5%20%E4%B8%8B%E5%8D%886.17.34.png?raw=true" alt="150" width="300">
+</div>
+</div>
+</div>
+        </section>
+
+        <footer class="post-footer">
+
+
+            <figure class="author-image">
+                <a class="img" href="" style="background-image: url(https://avatars.githubusercontent.com/u/6302288?v=3)"><span class="hidden">J0hnnny's Picture</span></a>
+            </figure>
+
+            <section class="author">
+                <h4><a href="">J0hnnny</a></h4>
+
+                    <p>Read <a href="">more posts</a> by this author.</p>
+                <div class="author-meta">
+                    <span class="author-location icon-location">China</span>
+                    <span class="author-link icon-link"><a href="http://weibo.com/jcack">http://weibo.com/jcack</a></span>
+                </div>
+            </section>
+
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="https://twitter.com/share?text=15.6.15%20UICollectionViewLayout%E5%AE%9E%E8%B7%B5%E2%80%94%E2%80%94%E7%9F%B3%E5%B7%A5%E5%B8%83%E5%B1%80%EF%BC%88%E7%80%91%E5%B8%83%E6%B5%81%E5%B8%83%E5%B1%80%EF%BC%89%E7%9A%84%E5%AE%9E%E7%8E%B0&amp;url=https://j0hdev.github.io/blog/2015/06/15/collectionview-layout-by-tutorial.html"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://j0hdev.github.io/blog/2015/06/15/collectionview-layout-by-tutorial.html"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=https://j0hdev.github.io/blog/2015/06/15/collectionview-layout-by-tutorial.html"
+                   onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+        </footer>
+
+
+    </article>
+
+</main>
+
+
+
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="https://j0hdev.github.io/blog">J0hnny的博客</a> &copy; 2015</section>
+        <section class="poweredby">Proudly published with <a href="http://hubpress.io">HubPress</a></section>
+    </footer>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();      
+      </script>
+
+    <script type="text/javascript" src="//j0hdev.github.io/blog/themes/Casper/assets/js/jquery.fitvids.js?v=1.0.0"></script>
+    <script type="text/javascript" src="//j0hdev.github.io/blog/themes/Casper/assets/js/index.js?v=1.0.0"></script>
+
+</body>
+</html>
