@@ -11,7 +11,7 @@ CoreText 是 iOS 中负责文字排版的一个框架，非常强大，能做到
 
 首先创建一个 `Single View Application`
 
-image::http://ac-uoe5d82x.clouddn.com/18nR7uFHQhw9KoPlXhANtAiJHkyUIKrTSFKTOVKe.png[200,100]
+image::http://ac-uoe5d82x.clouddn.com/18nR7uFHQhw9KoPlXhANtAiJHkyUIKrTSFKTOVKe.png[100,50]
 
 然后创建一个`UIView`的子类
 
