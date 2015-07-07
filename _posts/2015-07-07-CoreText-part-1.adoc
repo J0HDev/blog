@@ -11,15 +11,15 @@ CoreText 是 iOS 中负责文字排版的一个框架，非常强大，能做到
 
 首先创建一个 `Single View Application`
 
-image::http://ac-uoe5d82x.clouddn.com/18nR7uFHQhw9KoPlXhANtAiJHkyUIKrTSFKTOVKe.png[400,300]
+image::http://ac-uoe5d82x.clouddn.com/18nR7uFHQhw9KoPlXhANtAiJHkyUIKrTSFKTOVKe.png[200,100]
 
 然后创建一个`UIView`的子类
 
-image::http://ac-uoe5d82x.clouddn.com/8M4eHJjTlWOVjr6bBqHl5B4llRSU8s03zr4kFdNO.png[400,300]
+image::http://ac-uoe5d82x.clouddn.com/8M4eHJjTlWOVjr6bBqHl5B4llRSU8s03zr4kFdNO.png[200,100]
 
 接着在 `Main.storyboard` 中把 `XCode` 建立的那个 `ViewController` 的 `View` 更改为刚才创建的View。
 
-image::http://ac-uoe5d82x.clouddn.com/WHAwVM09wade5kKT0dFLNjJMUBgMaIp3CmnF8T8F.png[400,300]
+image::http://ac-uoe5d82x.clouddn.com/WHAwVM09wade5kKT0dFLNjJMUBgMaIp3CmnF8T8F.png[200,100]
 
 === 在本篇文章中会使用到的几个对象和函数
 
