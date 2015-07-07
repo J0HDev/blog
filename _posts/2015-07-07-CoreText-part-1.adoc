@@ -1,0 +1,47 @@
+= CoreText学习笔记-在View上和图片上渲染文字
+:hp-alt-title: CoreText part 1
+
+
+== 关于CoreText
+CoreText 是 iOS 中负责文字排版的一个框架，非常强大，能做到图文的混排，特别是一些文字类的APP，比如新闻之类的APP中广泛的使用，还能捕捉到文章中的链接或者是@XXX或者其他起到链接作用的文字，总之非常牛逼。
+
+这篇文章记录我在学习 CoreText 中所遇到的知识点。
+
+== 开始
+
+首先创建一个 `Single View Application`
+
+image::http://ac-uoe5d82x.clouddn.com/18nR7uFHQhw9KoPlXhANtAiJHkyUIKrTSFKTOVKe.png[400,300]
+
+然后创建一个`UIView`的子类
+
+image::http://ac-uoe5d82x.clouddn.com/8M4eHJjTlWOVjr6bBqHl5B4llRSU8s03zr4kFdNO.png[400,300]
+
+接着在 `Main.storyboard` 中把 `XCode` 建立的那个 `ViewController` 的 `View` 更改为刚才创建的View。
+
+image::http://ac-uoe5d82x.clouddn.com/WHAwVM09wade5kKT0dFLNjJMUBgMaIp3CmnF8T8F.png[400,300]
+
+=== 在本篇文章中会使用到的几个对象和函数
+
+* UIGraphicsGetCurrentContext()
+ 
+ 该函数能获取到一个上下文环境，所有的文字都在该上下文中绘制。它必须在 - drawRect: 方法中才能获取到。
+
+* NSAttributedString
+ 
+ 这是在CoreText中最核心的类，所有的文字包括颜色、大小等属性都被该类封装，在文字被渲染绘制的时候都根据这些属性来。
+ 
+ 
+* CGPathCreateMutable
+ 
+ 它将创建一个可变的路径，文字将绘制在该区域内。
+ 
+* CTFramesetterCreateWithAttributedString()
+
+ 它将创建一个Framesetter.
+ 
+* CTFramesetterCreateFrame()
+ 
+ 最终整合所有的属性，包括要渲染绘制的文字，该文字要渲染绘制的范围，区域最终通过CTFrameDraw()函数绘制在View上。
+ 
+ 
