@@ -90,6 +90,6 @@ image::http://ac-uoe5d82x.clouddn.com/KY8BaWRusjrvr7mHu5mlcGoJ3dEUAnCSYuMjzxQs.p
 
 这样它就会把坐标系翻转过来了，效果如下图:
 
-image::http://ac-uoe5d82x.clouddn.com/Y0837pqPFOI9Sj95Emyzl15h8JNJIcG6M2OqwbL6.png[image,200,400]
+image::http://ac-uoe5d82x.clouddn.com/Y0837pqPFOI9Sj95Emyzl15h8JNJIcG6M2OqwbL6.png[image,100,75]
 
 为什么要在 `CGContextTranslateCTM(context, 0, CGRectGetHeight(self.bounds) + 20)` 这行代码的后面加上20呢，因为不加20的话就会在 `(0,0)` 的坐标上开始绘制，这样一来文字就会被状态栏挡住，加上20就意味着坐标变成了 `(0,20)` ，这样就会向下偏移20的点开始绘制，就能避免这样的问题，当然如果这个 `View` 的 `bounds.origin` 属性并不是(0,0)，而是其他坐标比如 `(0,20)` 的话，就没必要加上20了，因为本来就没有可能会在状态栏下面绘制。
