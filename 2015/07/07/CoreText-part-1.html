@@ -23,7 +23,7 @@
     <meta property="og:description" content="关于CoreText CoreText 是 iOS 中负责文字排版的一个框架，非常强大，能做到图文的混排，特别是一些文字类的APP，比如新闻之类的APP中广泛的使用，还能捕捉到文章中的链接或者是@XXX或者其他起到链接作用的文字，总之非常牛逼。 这篇文章记录我在学习 CoreText 中所遇到的知识点。 开始 首先创建一个 Single View Application 然后创建一个UIView的子类 接着在 Main.storyboard 中把 XCode 建立的那个 ViewController 的 View 更改为刚才创建的View。 在本篇文章..." />
     <meta property="og:url" content="https://j0hdev.github.io/blog/2015/07/07/CoreText-part-1.html" />
     <meta property="article:published_time" content="2015-07-06T16:00:00.000Z" />
-    <meta property="article:modified_time" content="2015-07-08T03:13:26.372Z" />
+    <meta property="article:modified_time" content="2015-07-08T03:17:06.537Z" />
     
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="CoreText学习笔记-在View上和图片上渲染文字" />
@@ -45,7 +45,7 @@
     "headline": "CoreText学习笔记-在View上和图片上渲染文字",
     "url": "https://j0hdev.github.io/blog/2015/07/07/CoreText-part-1.html",
     "datePublished": "2015-07-06T16:00:00.000Z",
-    "dateModified": "2015-07-08T03:13:26.372Z",
+    "dateModified": "2015-07-08T03:17:06.537Z",
     "description": "关于CoreText CoreText 是 iOS 中负责文字排版的一个框架，非常强大，能做到图文的混排，特别是一些文字类的APP，比如新闻之类的APP中广泛的使用，还能捕捉到文章中的链接或者是@XXX或者其他起到链接作用的文字，总之非常牛逼。 这篇文章记录我在学习 CoreText 中所遇到的知识点。 开始 首先创建一个 Single View Application 然后创建一个UIView的子类 接着在 Main.storyboard 中把 XCode 建立的那个 ViewController 的 View 更改为刚才创建的View。 在本篇文章..."
 }
     </script>
@@ -203,7 +203,7 @@
 </div>
 </div>
 <div class="paragraph">
-<p>可以看见，文字虽然被绘制出来了，但是似乎倒过来了，并且显示在了左下角，这是因为 <code>CoreText</code> 使用的是 <code>OS X</code> 应用程序的坐标系，它的坐标系和 <code>iOS</code> <code>UIKit</code> 的坐标系是相反的，<code>UIKit</code> 的原点在左上角，它确实在左下角，所以要把它们转换过来只要把手机倒过来就OK了，但是这肯定不是最完美的解决方案，谁会把手机倒过来使用呢？哈哈~~</p>
+<p>可以看见，文字虽然被绘制出来了，但是似乎倒过来了，并且显示在了左下角，这是因为 <code>CoreText</code> 使用的是 <code>OS X</code> 应用程序的坐标系，它的坐标系和 <code>iOS</code> <code>UIKit</code> 的坐标系是相反的，<code>UIKit</code> 的原点在左上角，它却是在左下角，所以要把它们转换过来只要把手机倒过来就OK了，但是这肯定不是最完美的解决方案，谁会把手机倒过来使用呢？哈哈~~</p>
 </div>
 <div class="paragraph">
 <p>完美的解决方法是在 <code>- drawRect:</code> 方法的第一行就插入如下代码:</p>
@@ -220,7 +220,7 @@
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="http://ac-uoe5d82x.clouddn.com/Y0837pqPFOI9Sj95Emyzl15h8JNJIcG6M2OqwbL6.png" alt="200" width="400">
+<img src="http://ac-uoe5d82x.clouddn.com/Y0837pqPFOI9Sj95Emyzl15h8JNJIcG6M2OqwbL6.png" alt="image" width="200" height="400">
 </div>
 </div>
 <div class="paragraph">
