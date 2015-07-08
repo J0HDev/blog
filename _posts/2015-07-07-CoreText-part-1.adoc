@@ -78,7 +78,7 @@ image::http://ac-uoe5d82x.clouddn.com/WHAwVM09wade5kKT0dFLNjJMUBgMaIp3CmnF8T8F.p
 
 image::http://ac-uoe5d82x.clouddn.com/KY8BaWRusjrvr7mHu5mlcGoJ3dEUAnCSYuMjzxQs.png[200,400]
 
-可以看见，文字虽然被绘制出来了，但是似乎倒过来了，并且显示在了左下角，这是因为 `CoreText` 使用的是 `OS X` 应用程序的坐标系，它的坐标系和 `iOS` `UIKit` 的坐标系是相反的，`UIKit` 的原点在左上角，它确实在左下角，所以要把它们转换过来只要把手机倒过来就OK了，但是这肯定不是最完美的解决方案，谁会把手机倒过来使用呢？哈哈~~
+可以看见，文字虽然被绘制出来了，但是似乎倒过来了，并且显示在了左下角，这是因为 `CoreText` 使用的是 `OS X` 应用程序的坐标系，它的坐标系和 `iOS` `UIKit` 的坐标系是相反的，`UIKit` 的原点在左上角，它却是在左下角，所以要把它们转换过来只要把手机倒过来就OK了，但是这肯定不是最完美的解决方案，谁会把手机倒过来使用呢？哈哈~~
 
 完美的解决方法是在 `- drawRect:` 方法的第一行就插入如下代码:
 
@@ -90,6 +90,6 @@ image::http://ac-uoe5d82x.clouddn.com/KY8BaWRusjrvr7mHu5mlcGoJ3dEUAnCSYuMjzxQs.p
 
 这样它就会把坐标系翻转过来了，效果如下图:
 
-image::http://ac-uoe5d82x.clouddn.com/Y0837pqPFOI9Sj95Emyzl15h8JNJIcG6M2OqwbL6.png[200,400]
+image::http://ac-uoe5d82x.clouddn.com/Y0837pqPFOI9Sj95Emyzl15h8JNJIcG6M2OqwbL6.png[image,200,400]
 
 为什么要在 `CGContextTranslateCTM(context, 0, CGRectGetHeight(self.bounds) + 20)` 这行代码的后面加上20呢，因为不加20的话就会在 `(0,0)` 的坐标上开始绘制，这样一来文字就会被状态栏挡住，加上20就意味着坐标变成了 `(0,20)` ，这样就会向下偏移20的点开始绘制，就能避免这样的问题，当然如果这个 `View` 的 `bounds.origin` 属性并不是(0,0)，而是其他坐标比如 `(0,20)` 的话，就没必要加上20了，因为本来就没有可能会在状态栏下面绘制。
