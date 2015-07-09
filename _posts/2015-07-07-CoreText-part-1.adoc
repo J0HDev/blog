@@ -93,3 +93,110 @@ image::http://ac-uoe5d82x.clouddn.com/KY8BaWRusjrvr7mHu5mlcGoJ3dEUAnCSYuMjzxQs.p
 image::http://ac-uoe5d82x.clouddn.com/Y0837pqPFOI9Sj95Emyzl15h8JNJIcG6M2OqwbL6.png[image, 100, 75]
 
 为什么要在 `CGContextTranslateCTM(context, 0, CGRectGetHeight(self.bounds) + 20)` 这行代码的后面加上20呢，因为不加20的话就会在 `(0,0)` 的坐标上开始绘制，这样一来文字就会被状态栏挡住，加上20就意味着坐标变成了 `(0,20)` ，这样就会向下偏移20的点开始绘制，就能避免这样的问题，当然如果这个 `View` 的 `bounds.origin` 属性并不是(0,0)，而是其他坐标比如 `(0,20)` 的话，就没必要加上20了，因为本来就没有可能会在状态栏下面绘制。
+
+== 在图片上绘制文字
+
+有时候，可能需要在把所有的文字都绘制在一张图片上，vvebo 是一款第三方微博客户端，为了使得微博列表的滚动极致流畅，其中之一点就是他把微博内容异步渲染到了一张图片上。
+
+=== 步骤
+
+* 首先需要一个 `UIImageView` 因为最终生成的是 `UIImage` 对象，需要丢到 `UIImageView` 里头去。
+* 然后通过 `void UIGraphicsBeginImageContext(CGSize size)` 函数来创建一个图片上下文，参数 `size` 是指定上下文大小，一般就是图片的 `size`。
+* 然后和上面在 `View` 上绘制文字一样，只是最终 `CTFrameDraw()` 函数会画在图片上，而不是 `View` 上。
+* 最后调用 `UIImage* UIGraphicsGetImageFromCurrentImageContext(void)` 函数，来获得这张生成的带有文字的图片。
+
+直接上代码：
+```
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(80, 50, 200, 200)];
+    [self.view addSubview:imageView];
+    
+    //创建图片上下文
+    UIGraphicsBeginImageContext(imageView.frame.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    //设置图片背景色
+    [[UIColor whiteColor] setFill];
+    CGContextFillRect(context, imageView.bounds);
+    
+    NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:@"Hello , CoreText\nthis is an image"];
+    [string addAttribute:NSForegroundColorAttributeName value:[UIColor brownColor] range:NSMakeRange(17, 16)];
+    
+    CGMutablePathRef path = CGPathCreateMutable();
+    CGPathAddRect(path, NULL, imageView.bounds);
+    
+    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFMutableAttributedStringRef)string);
+    
+    CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, string.length), path, NULL);
+    
+    CGContextSetTextMatrix(context, CGAffineTransformIdentity);
+    CGContextTranslateCTM(context, 0, CGRectGetHeight(imageView.bounds));
+    CGContextScaleCTM(context, 1.0, -1.0);
+    
+    CTFrameDraw(frame, context);
+    
+    CFRelease(path);
+    CFRelease(framesetter);
+    CFRelease(frame);
+    
+    //从图片上下文中获取图片
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    
+    imageView.image = image;
+    
+    
+    //移除上下文
+    UIGraphicsEndImageContext();
+```
+
+效果图:
+
+image::http://ac-uoe5d82x.clouddn.com/shCbu8AL9IMoQ52zjMvIhyAziogWmMxX2gUU5MYR.png[]
+
+=== 如何异步渲染
+
+很简单，用 `GCD` 就可以了，直接上代码：
+
+```
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+
+        //创建图片上下文
+        UIGraphicsBeginImageContext(imageView.frame.size);
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        
+        //设置图片背景色
+        [[UIColor whiteColor] setFill];
+        CGContextFillRect(context, imageView.bounds);
+        
+        NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:@"Hello , CoreText\nthis is an image"];
+        [string addAttribute:NSForegroundColorAttributeName value:[UIColor brownColor] range:NSMakeRange(17, 16)];
+        
+        CGMutablePathRef path = CGPathCreateMutable();
+        CGPathAddRect(path, NULL, imageView.bounds);
+        
+        CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFMutableAttributedStringRef)string);
+        
+        CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, string.length), path, NULL);
+        
+        CGContextSetTextMatrix(context, CGAffineTransformIdentity);
+        CGContextTranslateCTM(context, 0, CGRectGetHeight(imageView.bounds));
+        CGContextScaleCTM(context, 1.0, -1.0);
+        
+        CTFrameDraw(frame, context);
+        
+        CFRelease(path);
+        CFRelease(framesetter);
+        CFRelease(frame);
+        
+        //从图片上下文中获取图片
+        UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            imageView.image = image;
+            UIGraphicsEndImageContext();
+        });
+    });
+```
+
+效果和上面的代码一样，只不过这次，这张图片的渲染和绘制不在主线程了，不会影响UI的流畅性，这是一个很炫酷的大招。
+
+第一篇学习笔记暂完，下一篇待续~
