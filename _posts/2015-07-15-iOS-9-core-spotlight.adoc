@@ -1,0 +1,170 @@
+= iOS9 CoreSpotlight 学习笔记
+:hp-alt-title: iOS 9 core spotlight
+
+学习资料: https://www.shinobicontrols.com/blog/ios9-day-by-day-day1-search-apis
+
+== 介绍
+
+在iOS9中，多了一个新API，这个API使得一个APP里面的内容可以被 `Spotlight` 搜索到，对于一些存放大量内容的APP来说这个特性很爽，我感觉像印象笔记这样的APP八成会用这个API来提供用户搜索自己的笔记。
+
+废话不多讲了，因为这是篇学习笔记，所以里面的例子和上面链接里面的例子一模一样，只不过我是用 `objective-c` 来实现的。
+
+这里的例子是一个模拟你的好友列表的这么一个APP，好友列表里面好友的信息可以通过 `Spotlight` 来搜索到。
+
+
+== Start
+
+`StoryBoard`长这样 
+
+image::http://ac-uoe5d82x.clouddn.com/sxqiu3LS2weszhnufWhanmwagYfAMPtznGiAuCyo.png[]
+
+
+然后需要一个模型，暂且就叫做 `Person`
+
+代码如下: 
+
+```
+@interface Person : NSObject
+
+@property (nonatomic, copy) NSString *name;
+@property (nonatomic, copy) NSString *contentDescription;
+@property (nonatomic, copy) NSString *personId;
+@property (nonatomic, strong) UIImage *image;
+
+@end
+```
+
+然后需要一个 `DataSource` 类，来帮忙生成假数据，并提供一个 `people数组` 这里存放了所有的好友信息。这个类还负责使用 `Core Spotlight`  API 来把好友信息加入到索引，使得这些信息可被搜索。
+
+```
+@class Person;
+
+@interface WYDataSource : NSObject
+
+@property (nonatomic, readonly) NSMutableArray *people;
+
+- (instancetype)init;
+
+- (void)savePeopleToIndex;
+- (Person *)friendWith:(NSString *)personId;
+- (void)deleteAllPeopleFormIndex;
+
+@end
+```
+
+在 `- init` 方法里初始化所有数据
+
+```
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        
+        NSArray *names = @[
+                            @"becky",
+                            @"ben",
+                            @"jane",
+                            @"pete",
+                            @"ray",
+                            @"tom"
+                                ];
+        
+        _people = [NSMutableArray arrayWithCapacity:names.count];
+        NSUInteger idx = 0;
+        
+        for (NSString *name in names) {
+            Person *person = [[Person alloc] init];
+            person.name = name;
+            person.contentDescription = [NSString stringWithFormat:@"He name is %@ , xxxxxxxxxxxxxxxxxxxxxxxxx", name];
+            person.image = [UIImage imageNamed:name];
+            person.personId = [NSString stringWithFormat:@"%ld",idx];
+            idx++;
+            [_people addObject:person];
+        }
+        
+    }
+    return self;
+}
+```
+
+然后把这些数据丢到 `TableView` 里去，这些不是重点，就不多说了，现在启动APP就是这个样子。
+
+image::http://ac-uoe5d82x.clouddn.com/93qH4CLuMLgAwlWmdsNXESrIXiD6gSNTESejCnWh.png[]
+
+=== 把好友信息变得可以搜索
+
+重点来了，实现 `- savePeopleToIndex` 这个函数，代码如下:
+
+```
+- (void)savePeopleToIndex {
+    
+    NSMutableArray<CSSearchableItem *> *items = [NSMutableArray array];
+    
+    for (Person *person in self.people) {
+        
+        CSSearchableItemAttributeSet *set = [[CSSearchableItemAttributeSet alloc] initWithItemContentType:@"image"];
+        set.title = person.name;
+        set.contentDescription = person.contentDescription;
+        set.thumbnailData = UIImagePNGRepresentation(person.image);
+        
+        CSSearchableItem *item = [[CSSearchableItem alloc]
+                                  initWithUniqueIdentifier:person.personId
+                                  domainIdentifier:@"com.x.iOS9Demo"
+                                  attributeSet:set];
+        
+        [items addObject:item];
+    }
+    
+    [[CSSearchableIndex defaultSearchableIndex]
+     indexSearchableItems:items
+     completionHandler:^(NSError * __nullable error) {
+         if (error) {
+             NSLog(@"%@",error);
+         }
+     }];
+}
+```
+
+第一行数据的创建用了 `OC` 的新玩意，泛型，和 `JAVA` 类似，然后遍历 `people数组`，创建一个 `CSSearchableItemAttributeSet` 对象然后丢给 `CSSearchableItem` 最后把 `CSSearchableItem` 丢进数组，然后使用 `- indexSearchableItems:` 方法把这个数组传进去，结果会通过 `block` 通知，然后关掉APP，搜索一下就能看到结果了。
+
+image::http://ac-uoe5d82x.clouddn.com/a28s7tPbBJbEhsFHlgGki65g0SwwaLw6oq67gmqz.png[] 
+
+=== 用户点击搜索结果后打开对应的视图
+
+用户搜索到内容以后点击，系统会默认打开该APP
+
+image::http://ac-uoe5d82x.clouddn.com/Ode8TA3t3MHtaHF2K24rptElbt31VKfS2YyNoQm4.png[]
+
+当APP被这样打开以后，`AppDelage` 中会有一个方法被通知到，`- application:continueUserActivity:restorationHandler:` 在该方法中有一个参数保存了ID信息，这个ID就是在 `- savePeopleToIndex` 方法中实例化 `CSSearchableItem` 对象时候传入的第一个参数。拿到个ID以后就可以在这里做一些后续的操作了，比如push到另一个View，显示当前ID对应的好友信息，具体代码如下：
+
+```
+- (BOOL)application:(nonnull UIApplication *)application continueUserActivity:(nonnull NSUserActivity *)userActivity restorationHandler:(nonnull void (^)(NSArray * __nullable))restorationHandler {
+    
+    NSString *friendID = userActivity.userInfo[@"kCSSearchableItemActivityIdentifier"];
+    UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
+    [navigationController popToRootViewControllerAnimated:NO];
+    WYFriendTableViewController *friendTableViewController = (WYFriendTableViewController *)navigationController.viewControllers.firstObject;
+    [friendTableViewController showFriendWith:friendID];
+    
+    return YES;
+}
+```
+
+最终效果:
+
+image::http://ac-uoe5d82x.clouddn.com/RzXGXIde71BNWyInOmVW2LgAXGxQfuETYq2pnPle.gif[]
+
+如果需要删除的话，苹果也提供了三个API：
+
+```
+- (void)deleteSearchableItemsWithIdentifiers:(NSArray<NSString *> *)identifiers completionHandler:(void (^ __nullable)(NSError * __nullable error))completionHandler
+
+- (void)deleteSearchableItemsWithDomainIdentifiers:(NSArray<NSString *> *)domainIdentifiers completionHandler:(void (^ __nullable)(NSError * __nullable error))completionHandler
+
+- (void)deleteAllSearchableItemsWithCompletionHandler:(void (^ __nullable)(NSError * __nullable error))completionHandler
+```
+
+根据自己的需要使用即可。
+
+但是目前还有一个小问题，就是有时候明明加进索引的内容搜不到，关掉再搜就能能搜到，希望能在 iOS9 正式版中搞定这个问题。
+
+完整代码：https://github.com/J0HDev/CoreSpotlightDemo
