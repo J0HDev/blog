@@ -23,7 +23,7 @@
     <meta property="og:description" content="学习资料: https://www.shinobicontrols.com/blog/ios9-day-by-day-day1-search-apis 介绍 在iOS9中，多了一个新API，这个API使得一个APP里面的内容可以被 Spotlight 搜索到，对于一些存放大量内容的APP来说这个特性很爽，我感觉像印象笔记这样的APP八成会用这个API来提供用户搜索自己的笔记。 废话不多讲了，因为这是篇学习笔记，所以里面的例子和上面链接里面的例子一模一样，只不过我是用 objective-c 来实现的。 这里的例子是一个模拟你的好友列表的这么一个APP，..." />
     <meta property="og:url" content="https://j0hdev.github.io/blog/2015/07/15/iOS-9-core-spotlight.html" />
     <meta property="article:published_time" content="2015-07-14T16:00:00.000Z" />
-    <meta property="article:modified_time" content="2015-07-15T06:02:14.637Z" />
+    <meta property="article:modified_time" content="2015-07-15T06:04:21.026Z" />
     
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="iOS9 CoreSpotlight 学习笔记" />
@@ -45,7 +45,7 @@
     "headline": "iOS9 CoreSpotlight 学习笔记",
     "url": "https://j0hdev.github.io/blog/2015/07/15/iOS-9-core-spotlight.html",
     "datePublished": "2015-07-14T16:00:00.000Z",
-    "dateModified": "2015-07-15T06:02:14.637Z",
+    "dateModified": "2015-07-15T06:04:21.026Z",
     "description": "学习资料: https://www.shinobicontrols.com/blog/ios9-day-by-day-day1-search-apis 介绍 在iOS9中，多了一个新API，这个API使得一个APP里面的内容可以被 Spotlight 搜索到，对于一些存放大量内容的APP来说这个特性很爽，我感觉像印象笔记这样的APP八成会用这个API来提供用户搜索自己的笔记。 废话不多讲了，因为这是篇学习笔记，所以里面的例子和上面链接里面的例子一模一样，只不过我是用 objective-c 来实现的。 这里的例子是一个模拟你的好友列表的这么一个APP，..."
 }
     </script>
@@ -229,7 +229,7 @@
 </div>
 </div>
 <div class="paragraph">
-<p>第一行数据的创建用了 <code>OC</code> 的新玩意，泛型，和 <code>JAVA</code> 类似，然后遍历 <code>people数组</code>，创建一个 <code>CSSearchableItemAttributeSet</code> 对象然后丢给 <code>CSSearchableItem</code> 最后把 <code>CSSearchableItem</code> 丢进数组，然后使用 <code>- indexSearchableItems:</code> 方法把这个数组传进去，结果会通过 <code>block</code> 通知，然后关掉APP，搜索一下就能看到结果了。</p>
+<p>第一行数组的创建用了 <code>OC</code> 的新玩意，泛型，和 <code>JAVA</code> 类似，然后遍历 <code>people数组</code>，创建一个 <code>CSSearchableItemAttributeSet</code> 对象然后丢给 <code>CSSearchableItem</code> 最后把 <code>CSSearchableItem</code> 丢进数组，然后使用 <code>- indexSearchableItems:</code> 方法把这个数组传进去，结果会通过 <code>block</code> 通知，然后关掉APP，搜索一下就能看到结果了。</p>
 </div>
 <div class="imageblock">
 <div class="content">
