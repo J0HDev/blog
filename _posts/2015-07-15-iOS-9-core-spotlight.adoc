@@ -124,7 +124,7 @@ image::http://ac-uoe5d82x.clouddn.com/93qH4CLuMLgAwlWmdsNXESrIXiD6gSNTESejCnWh.p
 }
 ```
 
-第一行数据的创建用了 `OC` 的新玩意，泛型，和 `JAVA` 类似，然后遍历 `people数组`，创建一个 `CSSearchableItemAttributeSet` 对象然后丢给 `CSSearchableItem` 最后把 `CSSearchableItem` 丢进数组，然后使用 `- indexSearchableItems:` 方法把这个数组传进去，结果会通过 `block` 通知，然后关掉APP，搜索一下就能看到结果了。
+第一行数组的创建用了 `OC` 的新玩意，泛型，和 `JAVA` 类似，然后遍历 `people数组`，创建一个 `CSSearchableItemAttributeSet` 对象然后丢给 `CSSearchableItem` 最后把 `CSSearchableItem` 丢进数组，然后使用 `- indexSearchableItems:` 方法把这个数组传进去，结果会通过 `block` 通知，然后关掉APP，搜索一下就能看到结果了。
 
 image::http://ac-uoe5d82x.clouddn.com/a28s7tPbBJbEhsFHlgGki65g0SwwaLw6oq67gmqz.png[] 
 
