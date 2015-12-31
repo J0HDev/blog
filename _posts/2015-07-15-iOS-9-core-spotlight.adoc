@@ -23,7 +23,8 @@ image::http://ac-uoe5d82x.clouddn.com/sxqiu3LS2weszhnufWhanmwagYfAMPtznGiAuCyo.p
 
 代码如下: 
 
-```
+[source,objective-c]
+----
 @interface Person : NSObject
 
 @property (nonatomic, copy) NSString *name;
@@ -32,11 +33,12 @@ image::http://ac-uoe5d82x.clouddn.com/sxqiu3LS2weszhnufWhanmwagYfAMPtznGiAuCyo.p
 @property (nonatomic, strong) UIImage *image;
 
 @end
-```
+----
 
 然后需要一个 `DataSource` 类，来帮忙生成假数据，并提供一个 `people数组` 这里存放了所有的好友信息。这个类还负责使用 `Core Spotlight`  API 来把好友信息加入到索引，使得这些信息可被搜索。
 
-```
+[source,objective-c]
+----
 @class Person;
 
 @interface WYDataSource : NSObject
@@ -50,11 +52,12 @@ image::http://ac-uoe5d82x.clouddn.com/sxqiu3LS2weszhnufWhanmwagYfAMPtznGiAuCyo.p
 - (void)deleteAllPeopleFormIndex;
 
 @end
-```
+----
 
 在 `- init` 方法里初始化所有数据
 
-```
+[source,objective-c]
+----
 - (instancetype)init {
     self = [super init];
     if (self) {
@@ -84,7 +87,7 @@ image::http://ac-uoe5d82x.clouddn.com/sxqiu3LS2weszhnufWhanmwagYfAMPtznGiAuCyo.p
     }
     return self;
 }
-```
+----
 
 然后把这些数据丢到 `TableView` 里去，这些不是重点，就不多说了，现在启动APP就是这个样子。
 
@@ -94,7 +97,8 @@ image::http://ac-uoe5d82x.clouddn.com/93qH4CLuMLgAwlWmdsNXESrIXiD6gSNTESejCnWh.p
 
 重点来了，实现 `- savePeopleToIndex` 这个函数，代码如下:
 
-```
+[source,objective-c]
+----
 - (void)savePeopleToIndex {
     
     NSMutableArray<CSSearchableItem *> *items = [NSMutableArray array];
@@ -122,7 +126,7 @@ image::http://ac-uoe5d82x.clouddn.com/93qH4CLuMLgAwlWmdsNXESrIXiD6gSNTESejCnWh.p
          }
      }];
 }
-```
+----
 
 第一行数组的创建用了 `OC` 的新玩意，泛型，和 `JAVA` 类似，然后遍历 `people数组`，创建一个 `CSSearchableItemAttributeSet` 对象然后丢给 `CSSearchableItem` 最后把 `CSSearchableItem` 丢进数组，然后使用 `- indexSearchableItems:` 方法把这个数组传进去，结果会通过 `block` 通知，然后关掉APP，搜索一下就能看到结果了。
 
@@ -136,7 +140,8 @@ image::http://ac-uoe5d82x.clouddn.com/Ode8TA3t3MHtaHF2K24rptElbt31VKfS2YyNoQm4.p
 
 当APP被这样打开以后，`AppDelage` 中会有一个方法被通知到，`- application:continueUserActivity:restorationHandler:` 在该方法中有一个参数保存了ID信息，这个ID就是在 `- savePeopleToIndex` 方法中实例化 `CSSearchableItem` 对象时候传入的第一个参数。拿到个ID以后就可以在这里做一些后续的操作了，比如push到另一个View，显示当前ID对应的好友信息，具体代码如下：
 
-```
+[source,objective-c]
+----
 - (BOOL)application:(nonnull UIApplication *)application continueUserActivity:(nonnull NSUserActivity *)userActivity restorationHandler:(nonnull void (^)(NSArray * __nullable))restorationHandler {
     
     NSString *friendID = userActivity.userInfo[@"kCSSearchableItemActivityIdentifier"];
@@ -147,7 +152,7 @@ image::http://ac-uoe5d82x.clouddn.com/Ode8TA3t3MHtaHF2K24rptElbt31VKfS2YyNoQm4.p
     
     return YES;
 }
-```
+----
 
 最终效果:
 
@@ -155,13 +160,14 @@ image::http://ac-uoe5d82x.clouddn.com/RzXGXIde71BNWyInOmVW2LgAXGxQfuETYq2pnPle.g
 
 如果需要删除的话，苹果也提供了三个API：
 
-```
+[source,objective-c]
+----
 - (void)deleteSearchableItemsWithIdentifiers:(NSArray<NSString *> *)identifiers completionHandler:(void (^ __nullable)(NSError * __nullable error))completionHandler
 
 - (void)deleteSearchableItemsWithDomainIdentifiers:(NSArray<NSString *> *)domainIdentifiers completionHandler:(void (^ __nullable)(NSError * __nullable error))completionHandler
 
 - (void)deleteAllSearchableItemsWithCompletionHandler:(void (^ __nullable)(NSError * __nullable error))completionHandler
-```
+----
 
 根据自己的需要使用即可。
 
