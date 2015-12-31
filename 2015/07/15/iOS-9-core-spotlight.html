@@ -23,7 +23,7 @@
     <meta property="og:description" content="学习资料: https://www.shinobicontrols.com/blog/ios9-day-by-day-day1-search-apis 介绍 在iOS9中，多了一个新API，这个API使得一个APP里面的内容可以被 Spotlight 搜索到，对于一些存放大量内容的APP来说这个特性很爽，我感觉像印象笔记这样的APP八成会用这个API来提供用户搜索自己的笔记。 废话不多讲了，因为这是篇学习笔记，所以里面的例子和上面链接里面的例子一模一样，只不过我是用 objective-c 来实现的。 这里的例子是一个模拟你的好友列表的这么一个APP，..." />
     <meta property="og:url" content="https://j0hdev.github.io/blog/2015/07/15/iOS-9-core-spotlight.html" />
     <meta property="article:published_time" content="2015-07-14T16:00:00.000Z" />
-    <meta property="article:modified_time" content="2015-12-31T12:52:05.267Z" />
+    <meta property="article:modified_time" content="2015-12-31T12:57:35.653Z" />
     
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="iOS9 CoreSpotlight 学习笔记" />
@@ -45,7 +45,7 @@
     "headline": "iOS9 CoreSpotlight 学习笔记",
     "url": "https://j0hdev.github.io/blog/2015/07/15/iOS-9-core-spotlight.html",
     "datePublished": "2015-07-14T16:00:00.000Z",
-    "dateModified": "2015-12-31T12:52:05.267Z",
+    "dateModified": "2015-12-31T12:57:35.653Z",
     "description": "学习资料: https://www.shinobicontrols.com/blog/ios9-day-by-day-day1-search-apis 介绍 在iOS9中，多了一个新API，这个API使得一个APP里面的内容可以被 Spotlight 搜索到，对于一些存放大量内容的APP来说这个特性很爽，我感觉像印象笔记这样的APP八成会用这个API来提供用户搜索自己的笔记。 废话不多讲了，因为这是篇学习笔记，所以里面的例子和上面链接里面的例子一模一样，只不过我是用 objective-c 来实现的。 这里的例子是一个模拟你的好友列表的这么一个APP，..."
 }
     </script>
@@ -118,7 +118,7 @@
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>@interface Person : NSObject
+<pre class="highlight"><code class="language-objective-c" data-lang="objective-c">@interface Person : NSObject
 
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, copy) NSString *contentDescription;
@@ -133,7 +133,7 @@
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>@class Person;
+<pre class="highlight"><code class="language-objective-c" data-lang="objective-c">@class Person;
 
 @interface WYDataSource : NSObject
 
@@ -153,7 +153,7 @@
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>- (instancetype)init {
+<pre class="highlight"><code class="language-objective-c" data-lang="objective-c">- (instancetype)init {
     self = [super init];
     if (self) {
 
@@ -199,7 +199,7 @@
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>- (void)savePeopleToIndex {
+<pre class="highlight"><code class="language-objective-c" data-lang="objective-c">- (void)savePeopleToIndex {
 
     NSMutableArray&lt;CSSearchableItem *&gt; *items = [NSMutableArray array];
 
@@ -252,7 +252,7 @@
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>- (BOOL)application:(nonnull UIApplication *)application continueUserActivity:(nonnull NSUserActivity *)userActivity restorationHandler:(nonnull void (^)(NSArray * __nullable))restorationHandler {
+<pre class="highlight"><code class="language-objective-c" data-lang="objective-c">- (BOOL)application:(nonnull UIApplication *)application continueUserActivity:(nonnull NSUserActivity *)userActivity restorationHandler:(nonnull void (^)(NSArray * __nullable))restorationHandler {
 
     NSString *friendID = userActivity.userInfo[@"kCSSearchableItemActivityIdentifier"];
     UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
@@ -277,7 +277,7 @@
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>- (void)deleteSearchableItemsWithIdentifiers:(NSArray&lt;NSString *&gt; *)identifiers completionHandler:(void (^ __nullable)(NSError * __nullable error))completionHandler
+<pre class="highlight"><code class="language-objective-c" data-lang="objective-c">- (void)deleteSearchableItemsWithIdentifiers:(NSArray&lt;NSString *&gt; *)identifiers completionHandler:(void (^ __nullable)(NSError * __nullable error))completionHandler
 
 - (void)deleteSearchableItemsWithDomainIdentifiers:(NSArray&lt;NSString *&gt; *)domainIdentifiers completionHandler:(void (^ __nullable)(NSError * __nullable error))completionHandler
 
